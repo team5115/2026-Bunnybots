@@ -1,0 +1,58 @@
+package frc.team5115.subsystems.indexer;
+
+import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.DigitalInput;
+import frc.team5115.Constants;
+import java.util.ArrayList;
+
+public class IndexerIOSparkMax implements IndexerIO {
+    private final SparkMax motor;
+    private final RelativeEncoder encoder;
+    private final DigitalInput leftSensor;
+    private final DigitalInput rightSensor;
+    private final double gearing = 1f / 4f;
+
+    public IndexerIOSparkMax() {
+        motor = new SparkMax(Constants.INDEXER_MOTOR_ID, MotorType.kBrushless);
+        encoder = motor.getEncoder();
+        leftSensor = new DigitalInput(Constants.LEFT_SENSOR_ID);
+        rightSensor = new DigitalInput(Constants.RIGHT_SENSOR_ID);
+
+        final SparkMaxConfig motorConfig = new SparkMaxConfig();
+        motorConfig.smartCurrentLimit(30, 40).idleMode(IdleMode.kBrake);
+        motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    @Override
+    public void updateInputs(IndexerIOInputs inputs) {
+        inputs.velocityRPM = encoder.getVelocity() * gearing;
+        inputs.appliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
+        inputs.currentAmps = motor.getOutputCurrent();
+        inputs.motorTemperature = motor.getMotorTemperature();
+        inputs.leftSensor = !leftSensor.get();
+        inputs.rightSensor = !rightSensor.get();
+    }
+
+    @Override
+    public void setPercent(double percent) {
+        motor.set(percent);
+    }
+
+    @Override
+    public void setVoltage(double volts) {
+        motor.setVoltage(volts);
+    }
+
+    @Override
+    public ArrayList<SparkMax> getSparks() {
+        ArrayList<SparkMax> sparks = new ArrayList<>();
+        sparks.add(motor);
+        return sparks;
+    }
+}
