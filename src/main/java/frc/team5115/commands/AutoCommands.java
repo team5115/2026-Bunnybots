@@ -7,14 +7,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.team5115.Constants;
 import frc.team5115.Constants.SwerveConstants;
-import frc.team5115.subsystems.agitator.Agitator;
 import frc.team5115.subsystems.drive.Drivetrain;
 import frc.team5115.subsystems.indexer.Indexer;
 import frc.team5115.subsystems.intake.Intake;
-import frc.team5115.subsystems.shooter.Shooter;
-import frc.team5115.subsystems.shooter.SpeedRequest;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -30,53 +26,13 @@ public class AutoCommands {
     private AutoCommands() {}
 
     /** Intake while agitating and rejecting with indexer */
-    public static Command intake(Intake intake, Agitator agitator, Indexer indexer) {
-        return Commands.parallel(
-                Commands.print("Intaking!"), intake.intake(), agitator.intake(), indexer.reject());
+    public static Command intake(Intake intake, Indexer indexer) {
+        return Commands.idle();
     }
 
-    public static Command shoot(
-            double timeout,
-            Intake intake,
-            Drivetrain drivetrain,
-            Agitator agitator,
-            Indexer indexer,
-            Shooter shooter,
-            boolean shootForever) {
 
-        return Commands.parallel(
-                        Commands.print("Shooting!"),
-                        alignToHub(drivetrain),
-                        intake.intake(),
-                        shooter.requestSpinUp(SpeedRequest.AutonomouseShoot),
-                        shooter
-                                .waitForSetpoint()
-                                .alongWith(Commands.waitSeconds(Constants.AUTO_BARF_BURP_TIME))
-                                .raceWith(agitator.barfBurp(), indexer.vomit())
-                                .andThen(Commands.parallel(agitator.fast(), indexer.index())))
-                .withTimeout(timeout);
-    }
 
-    /** Spin up the shooter, reject with indexer, and agitate slowly. */
-    public static Command spinUp(
-            Drivetrain drivetrain, Agitator agitator, Indexer indexer, Shooter shooter) {
-        return Commands.parallel(
-                Commands.print("Spinning Up!"),
-                shooter.requestSpinUp(SpeedRequest.AutonomouseSpinUp),
-                // drivetrain.limitCurrent(true),
-                indexer.reject(),
-                agitator.slow());
-    }
-
-    public static Command alignToHub(Drivetrain drivetrain) {
-        return Commands.startRun(
-                        drivetrain::resetAngularPID,
-                        () -> {
-                            drivetrain.orbitHub(0, 0);
-                        },
-                        drivetrain)
-                .finallyDo(drivetrain::stop);
-    }
+   
 
     /**
      * Measures the velocity feedforward constants for the drive motors.

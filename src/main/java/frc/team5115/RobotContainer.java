@@ -11,9 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team5115.Constants.AutoConstants;
 import frc.team5115.commands.AutoCommands;
-import frc.team5115.subsystems.agitator.Agitator;
-import frc.team5115.subsystems.agitator.AgitatorIOSim;
-import frc.team5115.subsystems.agitator.AgitatorIOSparkMax;
 import frc.team5115.subsystems.drive.Drivetrain;
 import frc.team5115.subsystems.drive.GyroIO;
 import frc.team5115.subsystems.drive.GyroIONavx;
@@ -29,17 +26,11 @@ import frc.team5115.subsystems.intake.Intake;
 import frc.team5115.subsystems.intake.IntakeIO;
 import frc.team5115.subsystems.intake.IntakeIOSim;
 import frc.team5115.subsystems.intake.IntakeIOSparkMax;
-import frc.team5115.subsystems.shooter.Shooter;
-import frc.team5115.subsystems.shooter.ShooterIO;
-import frc.team5115.subsystems.shooter.ShooterIOSim;
-import frc.team5115.subsystems.shooter.ShooterIOSparkMax;
-import frc.team5115.subsystems.shooter.SpeedRequest;
 import frc.team5115.subsystems.vision.PhotonVision;
 import frc.team5115.subsystems.vision.PhotonVisionIO;
 import frc.team5115.subsystems.vision.PhotonVisionIOReal;
 import frc.team5115.subsystems.vision.PhotonVisionIOSim;
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -55,18 +46,16 @@ public class RobotContainer {
     private final Drivetrain drivetrain;
     private final PhotonVision vision;
     private final Intake intake;
-    private final Shooter shooter;
+    
     private final Indexer indexer;
-    private final Agitator agitator;
+   
     private final RobotFaults faults;
-
     // Controllers
     private final Bindings bindings;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
-    private final DoubleSupplier blindSpeedSupplier;
     private final BooleanSupplier hitTargetSupplier;
     private final BooleanConsumer hitTargetConsumer;
 
@@ -86,9 +75,9 @@ public class RobotContainer {
                                 new ModuleIOSparkMax(3),
                                 (pose) -> {});
                 vision = new PhotonVision(new PhotonVisionIOReal(), drivetrain);
-                shooter = new Shooter(new ShooterIOSparkMax(), drivetrain::getDistanceToHub);
+               
                 indexer = new Indexer(new IndexerIOSparkMax());
-                agitator = new Agitator(new AgitatorIOSparkMax());
+               
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -106,11 +95,11 @@ public class RobotContainer {
                                 new ModuleIOSim(swerveSim.getModules()[3]),
                                 swerveSim::setSimulationWorldPose);
                 vision = new PhotonVision(new PhotonVisionIOSim(), drivetrain);
-                shooter = new Shooter(new ShooterIOSim(), drivetrain::getDistanceToHub);
+                
                 indexer = new Indexer(new IndexerIOSim());
-                agitator = new Agitator(new AgitatorIOSim());
+               
 
-                MapleSim.initializeTriggers(indexer, shooter);
+                
                 break;
 
             default:
@@ -126,9 +115,9 @@ public class RobotContainer {
                                 new ModuleIO() {},
                                 (pose) -> {});
                 vision = new PhotonVision(new PhotonVisionIO() {}, drivetrain);
-                shooter = new Shooter(new ShooterIO() {}, drivetrain::getDistanceToHub);
+                
                 indexer = new Indexer(new IndexerIO() {});
-                agitator = new Agitator(new AgitatorIOSparkMax());
+                
                 break;
         }
 
@@ -168,39 +157,33 @@ public class RobotContainer {
         autoChooser.addOption("In-Code Drive FF", AutoCommands.feedforwardCharacterization(drivetrain));
         autoChooser.addOption("Translate All SysIds", drivetrain.translateAllSysIds());
         autoChooser.addOption("Spin All SysIds", drivetrain.spinAllSysIds());
-        autoChooser.addOption("Shooter All SysIds", shooter.allSysIds());
+        
 
-        final String speedKey = "ShooterSpeedInput";
+        
         final String targetKey = "HitTarget?";
         final String linearKey = "Actuator Pos";
         final double defaultSpeed = 2500;
-        SmartDashboard.putNumber(speedKey, defaultSpeed);
         SmartDashboard.putBoolean(targetKey, false);
         SmartDashboard.putNumber(linearKey, 0.5);
-        blindSpeedSupplier = () -> SmartDashboard.getNumber(speedKey, defaultSpeed);
+        
         hitTargetSupplier = () -> SmartDashboard.getBoolean(targetKey, false);
         hitTargetConsumer = (v) -> SmartDashboard.putBoolean(targetKey, v);
-        final DoubleSupplier linearActuatorSupplier = () -> SmartDashboard.getNumber(linearKey, 0.5);
 
         // Initialize bindings and robot faults
-        bindings = new Bindings(drivetrain, intake, agitator, indexer, shooter);
+        bindings = new Bindings(drivetrain, intake, indexer);
         faults =
                 new RobotFaults(
-                        drivetrain, vision, bindings::joysticksConnected, intake, agitator, indexer, shooter);
+                        drivetrain, vision, bindings::joysticksConnected, intake, indexer);
 
-        bindings.configureButtonBindings(blindSpeedSupplier, linearActuatorSupplier);
+        bindings.configureButtonBindings();
     }
 
     /** Register commands for pathplanner to use in autos. */
     private void registerCommands() {
-        NamedCommands.registerCommand("Intake", AutoCommands.intake(intake, agitator, indexer));
-        NamedCommands.registerCommand(
-                "Shoot", AutoCommands.shoot(4.5, intake, drivetrain, agitator, indexer, shooter, false));
-        NamedCommands.registerCommand(
-                "Shoot Forever",
-                AutoCommands.shoot(20, intake, drivetrain, agitator, indexer, shooter, true));
-        NamedCommands.registerCommand(
-                "Spin Up", AutoCommands.spinUp(drivetrain, agitator, indexer, shooter));
+        NamedCommands.registerCommand("Intake", AutoCommands.intake(intake, indexer));
+        
+       
+
         System.out.println("Registered Commands");
 
         // NamedCommands.registerCommand("Intake", Commands.idle());
@@ -224,16 +207,10 @@ public class RobotContainer {
         return autoChooser.get();
     }
 
-    public Command getAlternativeCommand() {
-        return shooter.requestSpinUp(SpeedRequest.AutonomouseHold);
-    }
+    
 
     public void robotPeriodic() {
         if (hitTargetSupplier.getAsBoolean()) {
-            Logger.recordOutput(
-                    "ShooterData/SuccessfulDistance", Meters.of(drivetrain.getDistanceToHub()));
-            Logger.recordOutput(
-                    "ShooterData/SuccessfulSpeed", RotationsPerSecond.of(blindSpeedSupplier.getAsDouble()));
             hitTargetConsumer.accept(false);
         }
 
@@ -256,7 +233,7 @@ public class RobotContainer {
     }
 
     public void simPeriodic() {
-        MapleSim.simPeriodic(intake, indexer, shooter);
+        MapleSim.simPeriodic(intake, indexer);
     }
 
     public void teleopInit() {

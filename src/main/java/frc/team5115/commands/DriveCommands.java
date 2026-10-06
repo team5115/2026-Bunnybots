@@ -10,14 +10,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.team5115.Constants;
 import frc.team5115.Constants.SwerveConstants;
-import frc.team5115.subsystems.agitator.Agitator;
 import frc.team5115.subsystems.drive.Drivetrain;
-import frc.team5115.subsystems.indexer.Indexer;
-import frc.team5115.subsystems.intake.Intake;
-import frc.team5115.subsystems.shooter.Shooter;
-import frc.team5115.subsystems.shooter.SpeedRequest;
+
+
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -31,68 +27,6 @@ public class DriveCommands {
     private static final double SLOW_MODE_MULTIPLIER = 0.10;
 
     private DriveCommands() {}
-
-    /**
-     * Runs forever, maintaining shooter speed based on drivetrain odometry. First, spins up the
-     * shooter and agitator while rejecting on indexer. After reaching desired shooter speed, it
-     * indexes and continues to shoot until interrupted.
-     *
-     * @param drivetrain
-     * @param agitator
-     * @param indexer
-     * @param shooter
-     * @param request the source of the request for shooting
-     * @return a Command that runs forever.
-     */
-    public static Command smartShoot(
-            Drivetrain drivetrain,
-            Intake intake,
-            Agitator agitator,
-            Indexer indexer,
-            Shooter shooter,
-            SpeedRequest request) {
-        return Commands.parallel(
-                intake.intake(),
-                shooter.requestSpinUp(request),
-                // drivetrain.limitCurrent(),
-                shooter
-                        .waitForSetpoint()
-                        .alongWith(Commands.waitSeconds(Constants.TELEOP_BARF_BURP_TIME))
-                        .raceWith(agitator.barfBurp(), indexer.vomit())
-                        .andThen(agitator.fast().alongWith(indexer.index())));
-    }
-
-    public static Command blindShoot(
-            Drivetrain drivetrain,
-            Intake intake,
-            Agitator agitator,
-            Indexer indexer,
-            Shooter shooter,
-            DoubleSupplier shooterSpeed) {
-        return Commands.parallel(
-                intake.intake(),
-                shooter.spinUpBlind(shooterSpeed),
-                // drivetrain.limitCurrent(),
-                shooter
-                        .waitForBlindSetpoint()
-                        .alongWith(Commands.waitSeconds(Constants.TELEOP_BARF_BURP_TIME))
-                        .raceWith(agitator.barfBurp(), indexer.vomit())
-                        .andThen(agitator.fast().alongWith(indexer.index())));
-    }
-
-    public static Command spinUp(SpeedRequest request, Drivetrain drivetrain, Shooter shooter) {
-        return shooter.requestSpinUp(request); // .alongWith(drivetrain.limitCurrent());
-    }
-
-    public static Command vomit(Agitator agitator, Indexer indexer, Intake intake, Shooter shooter) {
-        return Commands.parallel(agitator.vomit(), indexer.vomit(), intake.vomit());
-    }
-
-    public static Command superVomit(
-            Agitator agitator, Indexer indexer, Intake intake, Shooter shooter) {
-        return Commands.parallel(agitator.vomit(), indexer.vomit(), intake.vomit(), shooter.vomit());
-    }
-
     /**
      * Drive field relative while:
      *
@@ -101,20 +35,7 @@ public class DriveCommands {
      *   <li>maintaining required shooter speed
      * </ol>
      */
-    public static Command lockedOnHub(
-            Shooter shooter,
-            Drivetrain drivetrain,
-            BooleanSupplier slowMode,
-            DoubleSupplier xSupplier,
-            DoubleSupplier ySupplier) {
-        return Commands.startRun(
-                drivetrain::resetAngularPID,
-                () -> {
-                    final LinearVelocity v = calculateLinearVelocity(slowMode, xSupplier, ySupplier);
-                    drivetrain.orbitHub(v.x, v.y);
-                },
-                drivetrain);
-    }
+    
 
     public static Command fieldRelativeHeadingDrive(
             Drivetrain drivetrain,

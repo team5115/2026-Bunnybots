@@ -8,12 +8,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team5115.commands.DriveCommands;
-import frc.team5115.subsystems.agitator.Agitator;
 import frc.team5115.subsystems.drive.Drivetrain;
 import frc.team5115.subsystems.indexer.Indexer;
 import frc.team5115.subsystems.intake.Intake;
-import frc.team5115.subsystems.shooter.Shooter;
-import frc.team5115.subsystems.shooter.SpeedRequest;
 import java.util.function.DoubleSupplier;
 
 public class Bindings {
@@ -22,17 +19,16 @@ public class Bindings {
 
     private final Drivetrain drivetrain;
     private final Intake intake;
-    private final Agitator agitator;
+    
     private final Indexer indexer;
-    private final Shooter shooter;
+   
 
     public Bindings(
-            Drivetrain drivetrain, Intake intake, Agitator agitator, Indexer indexer, Shooter shooter) {
+            Drivetrain drivetrain, Intake intake, Indexer indexer) {
         this.drivetrain = drivetrain;
         this.intake = intake;
-        this.agitator = agitator;
         this.indexer = indexer;
-        this.shooter = shooter;
+
 
         // If in single mode, both Controller objects reference the controller on port 0
         driveJoy = new CommandXboxController(0);
@@ -120,7 +116,7 @@ public class Bindings {
     //     return new Trigger(() -> drivetrain.movingWithinTolerance(1.0, 2.0)).debounce(0.2);
     // }
 
-    public void configureButtonBindings(DoubleSupplier shooterSpeed, DoubleSupplier linearPosition) {
+    public void configureButtonBindings() {
         final Trigger slowMode = driveJoy.rightBumper();
 
         drivetrain.setDefaultCommand(
@@ -133,7 +129,6 @@ public class Bindings {
                         () -> -driveJoy.getRightX()));
 
         // Hold Y to enable intake mode
-        manipJoy.y().whileTrue(intake.intake().alongWith(agitator.intake()));
         // .toggleOnTrue(
         //         DriveCommands.fieldRelativeHeadingDrive(
         //                 drivetrain,
@@ -158,75 +153,26 @@ public class Bindings {
         driveJoy.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
         driveJoy.start().onTrue(offsetGyro());
 
-        manipJoy.back().whileTrue(DriveCommands.vomit(agitator, indexer, intake, shooter));
-        manipJoy.b().whileTrue(DriveCommands.superVomit(agitator, indexer, intake, shooter));
 
         driveJoy.povUp().onTrue(Commands.runOnce(drivetrain::humanOverrideLimit));
         driveJoy.povDown().onTrue(Commands.runOnce(drivetrain::setTeleopCurrentLimits));
 
         if (Constants.ENABLE_DEFAULT_AGITATION) {
-            agitator.setDefaultCommand(agitator.slow());
             indexer.setDefaultCommand(indexer.reject());
         }
 
-        // Right trigger smart shoots
-        manipJoy
-                .rightTrigger()
-                .whileTrue(
-                        DriveCommands.smartShoot(
-                                drivetrain, intake, agitator, indexer, shooter, SpeedRequest.ManualShoot));
+       
+        
 
-        // Left trigger shoots blind
-        manipJoy
-                .leftTrigger()
-                .whileTrue(
-                        DriveCommands.blindShoot(drivetrain, intake, agitator, indexer, shooter, shooterSpeed));
-
-        // While in teleop & hub active, spin up shooter
-        new Trigger(() -> Constants.isHubActive(1))
-                .debounce(Constants.AUTOMATED_SPINUP_DEBOUNCE_TIME, DebounceType.kFalling)
-                .and(automationEnabled())
-                // .and(slowEnoughToSpinUp())
-                .whileTrue(DriveCommands.spinUp(SpeedRequest.WhileHubActive, drivetrain, shooter));
-
-        // // While autoHubLock is enabled, or holding a, lock on
-        // autoHubLockEnabled()
-        driveJoy
-                .a()
-                .whileTrue(
-                        DriveCommands.lockedOnHub(
-                                shooter,
-                                drivetrain,
-                                slowMode,
-                                () -> -driveJoy.getLeftY(),
-                                () -> -driveJoy.getLeftX()));
-
-        // If driver is locking onto hub spin up shooter
-        driveJoy
-                .a()
-                // .and(slowEnoughToSpinUp())
-                .whileTrue(DriveCommands.spinUp(SpeedRequest.ManualSpinUp, drivetrain, shooter));
-
-        // Rumble whenever safe to shoot
-        // If automation enabled, then shoot automatically
-        safeToShoot().onTrue(rumble(Constants.RUMBLE_STRENGTH)).onFalse(rumble(0));
-        // .and(automationEnabled())
-        // .whileTrue(
-        //         DriveCommands.smartShoot(
-        //                 drivetrain, intake, agitator, indexer, shooter, SpeedRequest.SafeShoot));
-
-        // driveJoy.x().whileTrue(shooter.moveActuators(linearPosition));
     }
 
-
-
-    private Command rumble(double value) {
-        return Commands.runOnce(
-                () -> {
-                    driveJoy.setRumble(GenericHID.RumbleType.kBothRumble, value);
-                    if (manipJoy != null) {
-                        manipJoy.setRumble(GenericHID.RumbleType.kBothRumble, value);
-                    }
-                });
-    }
+//     private Command rumble(double value) {
+//         return Commands.runOnce(
+//                 () -> {
+//                     driveJoy.setRumble(GenericHID.RumbleType.kBothRumble, value);
+//                     if (manipJoy != null) {
+//                         manipJoy.setRumble(GenericHID.RumbleType.kBothRumble, value);
+//                     }
+//                 });
+//     }
 }
