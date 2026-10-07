@@ -1,7 +1,5 @@
 package frc.team5115;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -162,7 +160,6 @@ public class RobotContainer {
         
         final String targetKey = "HitTarget?";
         final String linearKey = "Actuator Pos";
-        final double defaultSpeed = 2500;
         SmartDashboard.putBoolean(targetKey, false);
         SmartDashboard.putNumber(linearKey, 0.5);
         
@@ -224,9 +221,7 @@ public class RobotContainer {
                         ? AutoConstants.RED_ALLIANCE_ZONE
                         : AutoConstants.BLUE_ALLIANCE_ZONE);
 
-        Logger.recordOutput("Info/IsHubActive?", Constants.isHubActive());
         Logger.recordOutput("Info/IsRedAlliance?", Constants.isRedAlliance());
-        Logger.recordOutput("Info/IsSafeToShoot?", bindings.safeToShoot());
         Logger.recordOutput("Info/IsAutomationEnabled?", bindings.automationEnabled());
 
         faults.periodic();

@@ -1,8 +1,6 @@
 package frc.team5115;
 
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -11,7 +9,6 @@ import frc.team5115.commands.DriveCommands;
 import frc.team5115.subsystems.drive.Drivetrain;
 import frc.team5115.subsystems.indexer.Indexer;
 import frc.team5115.subsystems.intake.Intake;
-import java.util.function.DoubleSupplier;
 
 public class Bindings {
     private final CommandXboxController driveJoy;
@@ -63,58 +60,7 @@ public class Bindings {
                 .negate();
     }
 
-    //     /**
-    //      * AutoHubLock is enabled if all of the following conditions are met:
-    //      *
-    //      * <ol>
-    //      *   <li>the robot is inside the sub-zone
-    //      *   <li>automation is enabled (see: {@link #automationEnabled()})
-    //      *   <li>neither driver presses the left trigger
-    //      * </ol>
-    //      *
-    //      * @return a Trigger that indicates if automatic hub lock is enabled
-    //      */
-    //     private Trigger autoHubLockEnabled() {
-    //         return drivetrain
-    //                 .inSubZone()
-    //                 .and(automationEnabled())
-    //                 .and(manipJoy.leftTrigger().negate())
-    //                 .and(driveJoy.leftTrigger().negate());
-    //     }
 
-    /**
-     * Determines if it safe to shoot. Checks that the following conditions are true:
-     *
-     * <ol>
-     *   <li>is the robot in the sub-zone?
-     *   <li>is the hub active?
-     *   <li>~~is the shooter spun up to speed?~~
-     *   <li>is the drivetrain heading locked onto the hub?
-     *   <li>are the drivetrain linear and rotational speeds close enough to zero?
-     * </ol>
-     *
-     * @param drivetrain
-     * @param shooter
-     * @return a Trigger of if it's safe to shoot
-     */
-    public Trigger safeToShoot() {
-        return drivetrain
-                .inSubZone()
-                .and(Constants::isHubActive)
-                // .and(shooter::atSetpoint)
-                .and(drivetrain::lockedOnHub)
-                .and(() -> drivetrain.movingWithinTolerance(0.2, 0.5));
-    }
-
-    // /**
-    //  * Is the drivetrain moving slow enough to consider spinning up the shooter? This trigger is
-    //  * primarily used in instances of checking whether the shooter should spin to a LOW speed.
-    //  *
-    //  * @return a debounced Trigger
-    //  */
-    // private Trigger slowEnoughToSpinUp() {
-    //     return new Trigger(() -> drivetrain.movingWithinTolerance(1.0, 2.0)).debounce(0.2);
-    // }
 
     public void configureButtonBindings() {
         final Trigger slowMode = driveJoy.rightBumper();
