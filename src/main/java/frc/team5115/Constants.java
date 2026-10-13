@@ -53,6 +53,7 @@ public final class Constants {
 
     public static final byte INTAKE_MOTOR_ID = -1;
     public static final byte INDEXER_MOTOR_ID = -1;
+    public static final byte ARM_MOTOR_ID = -1;
 
     public static final double LOOP_PERIOD_SECS = 0.02;
 
