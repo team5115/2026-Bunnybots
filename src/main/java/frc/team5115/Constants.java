@@ -58,7 +58,7 @@ public final class Constants {
 
     public static final double AUTOMATED_SPINUP_DEBOUNCE_TIME = 2.0; // seconds
 
-    public static final double SHOOTER_UNCALCULATED_SPEED = 2000; // RPM
+    
 
     public static final byte INTAKE_MOTOR_ID = 11;
     public static final byte AGITATOR_MOTOR_ID = 12;
