@@ -14,16 +14,11 @@ public class Bindings {
     private final CommandXboxController driveJoy;
     private final CommandXboxController manipJoy;
 
-    private final Drivetrain drivetrain;
-    
-    private final Indexer indexer;
-   
+    private final Drivetrain drivetrain;   
 
     public Bindings(
             Drivetrain drivetrain, Intake intake, Indexer indexer) {
         this.drivetrain = drivetrain;
-        this.indexer = indexer;
-
 
         // If in single mode, both Controller objects reference the controller on port 0
         driveJoy = new CommandXboxController(0);
@@ -100,14 +95,6 @@ public class Bindings {
 
         driveJoy.povUp().onTrue(Commands.runOnce(drivetrain::humanOverrideLimit));
         driveJoy.povDown().onTrue(Commands.runOnce(drivetrain::setTeleopCurrentLimits));
-
-        if (Constants.ENABLE_DEFAULT_AGITATION) {
-            indexer.setDefaultCommand(indexer.reject());
-        }
-
-       
-        
-
     }
 
 //     private Command rumble(double value) {

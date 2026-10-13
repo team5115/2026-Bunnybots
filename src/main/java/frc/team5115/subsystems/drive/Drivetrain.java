@@ -1,8 +1,5 @@
 package frc.team5115.subsystems.drive;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
@@ -13,7 +10,6 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -29,10 +25,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team5115.Constants;
-import frc.team5115.Constants.AutoConstants;
 import frc.team5115.Constants.SwerveConstants;
 import frc.team5115.Constants.SwerveConstants.DriveMotorCurrentLimit;
 import frc.team5115.Constants.VisionConstants;
@@ -360,27 +354,6 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
         return kinematics.toChassisSpeeds(getModuleStates());
     }
 
-    public double getRadialVelocity() {
-        final Translation2d centerOfOrbit = AutoConstants.getHubPosition();
-        final ChassisSpeeds chassisSpeeds = getChassisSpeeds();
-        final Translation2d linearVelocity =
-                new Translation2d(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
-        final Pose2d pose = getPose();
-        // Delta is the vector from the robot to the hub
-        final Translation2d delta = centerOfOrbit.minus(pose.getTranslation());
-        final Rotation2d baseHeading = delta.getAngle();
-        final Rotation2d inverseHeading = baseHeading.unaryMinus();
-
-        // Steps to find signed tangential linear velocity (where linear velocity is v)
-        // 1a. Project v into the direction of delta to get v_r (radial velocity)
-        // 1b. Rotate v_t by the inverse of the angle of delta so its pointed in the X axis
-        // 1c. Note the negative sign b/c dr/dt > 0 means moving away from hub
-        final Translation2d radialVelocity =
-                delta.times(linearVelocity.dot(delta) / delta.getSquaredNorm());
-        final double radialVelocityScalar = -radialVelocity.rotateBy(inverseHeading).getX();
-        return radialVelocityScalar;
-    }
-
     /**
      * Runs the drive at the desired velocity.
      *
@@ -422,63 +395,6 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
         Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
         Logger.recordOutput("ChassisSpeeds/Discrete", discreteSpeeds);
-    }
-
-    /**
-     * Drive based on field-relative linear velocities with the heading locked toward a position.
-     *
-     * @param vx x linear velocity
-     * @param vy y linear velocity
-     */
-    public void orbitHub(double vx, double vy) {
-        final Translation2d centerOfOrbit = AutoConstants.getHubPosition();
-        // We rotate driver input since normal drive is based on getGyroRotation()
-        final Rotation2d inputOffset = getRotation().minus(getGyroRotation());
-        final Translation2d linearVelocity = new Translation2d(vx, vy).rotateBy(inputOffset);
-
-        final Pose2d pose = getPose();
-        // Delta is the vector from the robot to the hub
-        final Translation2d delta = centerOfOrbit.minus(pose.getTranslation());
-        final Rotation2d baseHeading = delta.getAngle();
-        final Rotation2d inverseHeading = baseHeading.unaryMinus();
-        final double radius = delta.getNorm();
-
-        // Steps to find signed tangential linear velocity (where linear velocity is v)
-        // 1a. Project v into the direction of delta to get v_r (radial velocity)
-        // 1b. Rotate v_t by the inverse of the angle of delta so its pointed in the X axis
-        // 1c. Note the negative sign b/c dr/dt > 0 means moving away from hub
-        final Translation2d radialVelocity =
-                delta.times(linearVelocity.dot(delta) / delta.getSquaredNorm());
-        final double radialVelocityScalar = -radialVelocity.rotateBy(inverseHeading).getX();
-
-        // 2a. Subtract v_r from v to get v_t (tangential velocity)
-        // 2b. Rotate v_t by the inverse of the angle of delta so its pointed in the Y axis
-        // 2c. Note the negative sign to match convention of CCW is positive.
-        final Translation2d tangentialVelocity = linearVelocity.minus(radialVelocity);
-        final double tangentialVelocityScalar = -tangentialVelocity.rotateBy(inverseHeading).getY();
-
-        // 3a. Use this equation to find rotational velocity in terms of linear velocities
-        // 3b. Note that we consider radial velocity b/c it affects the radius
-        final double orbitOmega =
-                tangentialVelocityScalar / radius * (1 - radialVelocityScalar / radius);
-
-        final double pidOmega =
-                angularPID.calculate(pose.getRotation().getRadians(), baseHeading.getRadians());
-        final double totalOmega = orbitOmega + pidOmega;
-
-        runVelocity(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                        linearVelocity.getX(), linearVelocity.getY(), totalOmega, getRotation()),
-                true,
-                true);
-
-        Logger.recordOutput("Orbit/OrbitOmega", RadiansPerSecond.of(orbitOmega));
-        Logger.recordOutput("Orbit/PidOmega", RadiansPerSecond.of(pidOmega));
-        Logger.recordOutput("Orbit/TotalOmega", RadiansPerSecond.of(totalOmega));
-        Logger.recordOutput("Orbit/TangentialVelocity", MetersPerSecond.of(tangentialVelocityScalar));
-        Logger.recordOutput("Orbit/RadialVelocity", MetersPerSecond.of(radialVelocityScalar));
-        Logger.recordOutput("Orbit/TangentialVector", tangentialVelocity.rotateBy(inverseHeading));
-        Logger.recordOutput("Orbit/RadialVector", radialVelocity.rotateBy(inverseHeading));
     }
 
     public void resetAngularPID() {
@@ -556,24 +472,6 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
     /** Returns the current odometry rotation. */
     public Rotation2d getRotation() {
         return getPose().getRotation();
-    }
-
-    public double getDistanceToHub() {
-        return AutoConstants.distanceToHub(getPose());
-    }
-
-    public boolean lockedOnHub() {
-        return angularPID.atSetpoint() && orbitting;
-    }
-
-    @AutoLogOutput
-    public Trigger inSubZone() {
-        return new Trigger(() -> AutoConstants.isInSubZone(getPose()));
-    }
-
-    @AutoLogOutput
-    public Trigger inAllianceZone() {
-        return new Trigger(() -> AutoConstants.isInAllianceZone(getPose()));
     }
 
     /**

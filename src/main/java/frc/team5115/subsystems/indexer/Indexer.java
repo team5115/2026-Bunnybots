@@ -1,11 +1,9 @@
 package frc.team5115.subsystems.indexer;
 
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team5115.Constants;
 import frc.team5115.util.MotorContainer;
 import java.util.ArrayList;
@@ -76,10 +74,6 @@ public class Indexer extends SubsystemBase implements MotorContainer {
         return io.getSparks();
     }
 
-    public Trigger debounceIsSensing() {
-        return new Trigger(this::isSensing).debounce(2.0, Debouncer.DebounceType.kFalling);
-    }
-
     @AutoLogOutput
     public boolean isIndexing() {
         return inputs.appliedVolts > 0.5;
@@ -88,13 +82,5 @@ public class Indexer extends SubsystemBase implements MotorContainer {
     @AutoLogOutput
     public boolean isRejecting() {
         return inputs.appliedVolts < 0.5;
-    }
-
-    /**
-     * @return true if either sensor detects something
-     */
-    @AutoLogOutput
-    public boolean isSensing() {
-        return inputs.leftSensor && inputs.rightSensor;
     }
 }

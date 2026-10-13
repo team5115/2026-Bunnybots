@@ -7,7 +7,6 @@ import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.team5115.Constants.AutoConstants;
 import frc.team5115.commands.AutoCommands;
 import frc.team5115.subsystems.drive.Drivetrain;
 import frc.team5115.subsystems.drive.GyroIO;
@@ -178,21 +177,8 @@ public class RobotContainer {
     /** Register commands for pathplanner to use in autos. */
     private void registerCommands() {
         NamedCommands.registerCommand("Intake", AutoCommands.intake(intake, indexer));
-        
-       
 
         System.out.println("Registered Commands");
-
-        // NamedCommands.registerCommand("Intake", Commands.idle());
-        // NamedCommands.registerCommand(
-        //         "Shoot",
-        //         Commands.waitSeconds(3).beforeStarting(Commands.print("Shooting for 3 seconds...")));
-        // NamedCommands.registerCommand(
-        //         "Shoot Forever", Commands.idle().beforeStarting(Commands.print("Shooting
-        // Forever...")));
-        // NamedCommands.registerCommand(
-        //         "Spin Up", Commands.idle().beforeStarting(Commands.print("Spinning Up...")));
-        // System.out.println("Registered Empty Auto Commands");
     }
 
     /**
@@ -210,16 +196,6 @@ public class RobotContainer {
         if (hitTargetSupplier.getAsBoolean()) {
             hitTargetConsumer.accept(false);
         }
-
-        Logger.recordOutput(
-                "SubZone",
-                Constants.isRedAlliance() ? AutoConstants.RED_SUB_ZONE : AutoConstants.BLUE_SUB_ZONE);
-
-        Logger.recordOutput(
-                "AllianceZone",
-                Constants.isRedAlliance()
-                        ? AutoConstants.RED_ALLIANCE_ZONE
-                        : AutoConstants.BLUE_ALLIANCE_ZONE);
 
         Logger.recordOutput("Info/IsRedAlliance?", Constants.isRedAlliance());
         Logger.recordOutput("Info/IsAutomationEnabled?", bindings.automationEnabled());

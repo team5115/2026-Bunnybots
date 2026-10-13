@@ -1,13 +1,11 @@
 package frc.team5115.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team5115.Constants.SwerveConstants;
@@ -27,71 +25,6 @@ public class DriveCommands {
     private static final double SLOW_MODE_MULTIPLIER = 0.10;
 
     private DriveCommands() {}
-    /**
-     * Drive field relative while:
-     *
-     * <ol>
-     *   <li>maintaining a heading pointed towards the hub and
-     *   <li>maintaining required shooter speed
-     * </ol>
-     */
-    
-
-    public static Command fieldRelativeHeadingDrive(
-            Drivetrain drivetrain,
-            BooleanSupplier slowMode,
-            DoubleSupplier xSupplier,
-            DoubleSupplier ySupplier,
-            DoubleSupplier xAngleSupplier,
-            DoubleSupplier yAngleSupplier) {
-        final var defaultConstraints =
-                new TrapezoidProfile.Constraints(
-                        SwerveConstants.MAX_ANGULAR_SPEED, SwerveConstants.MAX_ANGULAR_SPEED * 2);
-        final var slowConstraints =
-                new TrapezoidProfile.Constraints(
-                        SwerveConstants.MAX_ANGULAR_SPEED * SLOW_MODE_MULTIPLIER,
-                        SwerveConstants.MAX_ANGULAR_SPEED * 2 * SLOW_MODE_MULTIPLIER);
-        final var anglePid =
-                new ProfiledPIDController(
-                        SwerveConstants.ANGULAR_PID_CONSTANTS.kP,
-                        SwerveConstants.ANGULAR_PID_CONSTANTS.kI,
-                        SwerveConstants.ANGULAR_PID_CONSTANTS.kD,
-                        defaultConstraints);
-        anglePid.setTolerance(SwerveConstants.ANGULAR_PID_TOLERANCE);
-        anglePid.enableContinuousInput(-Math.PI, Math.PI);
-
-        // prevents changing constraints constantly
-        final BooleanClass previousSlowMode = new BooleanClass(false);
-
-        return Commands.startRun(
-                () -> {
-                    final double rotation = drivetrain.getGyroRotation().getRadians();
-                    anglePid.reset(rotation);
-                    anglePid.setGoal(rotation);
-                },
-                () -> {
-                    if (slowMode.getAsBoolean() != previousSlowMode.b) {
-                        previousSlowMode.b = slowMode.getAsBoolean();
-                        anglePid.setConstraints(previousSlowMode.b ? slowConstraints : defaultConstraints);
-                    }
-                    final double angleX = MathUtil.applyDeadband(xAngleSupplier.getAsDouble(), DEADBAND);
-                    final double angleY = MathUtil.applyDeadband(yAngleSupplier.getAsDouble(), DEADBAND);
-                    final Rotation2d heading =
-                            angleX == 0 && angleY == 0
-                                    ? drivetrain.getGyroRotation()
-                                    : new Rotation2d(angleX, angleY);
-                    final double omega =
-                            anglePid.calculate(drivetrain.getGyroRotation().getRadians(), heading.getRadians());
-
-                    final LinearVelocity v = calculateLinearVelocity(slowMode, xSupplier, ySupplier);
-
-                    drivetrain.runVelocity(
-                            ChassisSpeeds.fromFieldRelativeSpeeds(v.x, v.y, omega, drivetrain.getGyroRotation()),
-                            false,
-                            true);
-                },
-                drivetrain);
-    }
 
     /**
      * Field or robot relative drive command using two joysticks (controlling linear and angular
@@ -169,14 +102,6 @@ public class DriveCommands {
         LinearVelocity(double vx, double vy) {
             x = vx;
             y = vy;
-        }
-    }
-
-    private static class BooleanClass {
-        public boolean b;
-
-        BooleanClass(boolean b) {
-            this.b = b;
         }
     }
 }

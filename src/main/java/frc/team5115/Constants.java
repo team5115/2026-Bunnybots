@@ -2,7 +2,6 @@ package frc.team5115;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 
 import com.pathplanner.lib.config.PIDConstants;
@@ -27,8 +26,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
-import java.util.Optional;
 
 public final class Constants {
     private static final boolean isReplay = false;
@@ -49,32 +46,15 @@ public final class Constants {
     public static final boolean SINGLE_MODE = false;
     public static final boolean DISABLE_AUTOMATION = false;
     public static final boolean ENABLE_DRIVER_CAMERA = true;
-    public static final boolean ENABLE_DEFAULT_AGITATION = true;
     public static final double RUMBLE_STRENGTH = 0.5;
-    private static final boolean agitateDuringIntake = false;
 
     public static final double TELEOP_BARF_BURP_TIME = 0.5;
     public static final double AUTO_BARF_BURP_TIME = 0.5;
 
-    public static final double AUTOMATED_SPINUP_DEBOUNCE_TIME = 2.0; // seconds
-
-    public static final double SHOOTER_UNCALCULATED_SPEED = 2000; // RPM
-
-    public static final byte INTAKE_MOTOR_ID = 11;
-    public static final byte AGITATOR_MOTOR_ID = 12;
-    public static final byte INDEXER_MOTOR_ID = 13;
-    public static final byte SHOOTER_MOTOR_ID = 14;
-
-    public static final byte LEFT_SENSOR_ID = 0;
-    public static final byte RIGHT_SENSOR_ID = 1;
-
-    public static final byte LED_STRIP_PWM_ID = 9;
-    public static final byte HOOD_ACTUATOR_1_PWM_ID = 0;
-    public static final byte HOOD_ACTUATOR_2_PWM_ID = 1;
+    public static final byte INTAKE_MOTOR_ID = -1;
+    public static final byte INDEXER_MOTOR_ID = -1;
 
     public static final double LOOP_PERIOD_SECS = 0.02;
-
-    public static final double SETPOINT_DEBOUNCE = 2.0;
 
     public static final double INTAKE_SPEED = 1.0;
     public static final double INTAKE_VOMIT_SPEED = -1.0;
@@ -82,18 +62,6 @@ public final class Constants {
     public static final double INDEX_SPEED = 0.5;
     public static final double INDEX_REJECT_SPEED = -0.15;
     public static final double INDEX_VOMIT_SPEED = -0.25;
-
-    public static final double AGITATOR_FAST_SPEED = 1.0;
-    public static final double AGITATOR_MAIN_PAUSE = 0.4;
-
-    public static final double AGITATOR_ALT_SPEED = 0.7;
-    public static final double AGITATOR_ALT_PAUSE = 0.15;
-
-    public static final double AGITATOR_INTAKE_SPEED =
-            agitateDuringIntake ? INTAKE_SPEED * 0.418 * 0.7 * 3.0 : 0;
-    public static final double AGITATOR_SLOW_SPEED = 0;
-    public static final double AGITATOR_VOMIT_SPEED = -1.0;
-    public static final double AGITATOR_BURP_SPEED = -1.0;
 
     public static class SwerveConstants {
         public static final byte FRONT_LEFT_DRIVE_ID = 6;
@@ -193,92 +161,8 @@ public final class Constants {
     public static class AutoConstants {
         public static final Mass ROBOT_MASS = Pounds.of(83); // TODO update weight estimation
 
-        public static final Translation2d BLUE_HUB = new Translation2d(4.63, 4.03);
-        public static final Translation2d RED_HUB = new Translation2d(11.92, 4.03);
-
-        // private static final Distance SUBZONE_X_SEMI_AXIS = Meters.of(3.0);
-        // private static final Distance SUBZONE_Y_SEMI_AXIS = Meters.of(3.0);
-        private static final Distance FIELD_WIDTH = Meters.of(8.09625);
-        // private static final Transform2d SUBZONE_CENTER_OFFSET =
-        //         new Transform2d(0, 0, Rotation2d.kZero);
-        private static final Distance ALLIANCE_ZONE_OFFSET = Meters.of(1.0);
-
-        // public static final Ellipse2d BLUE_SUB_ZONE =
-        //         new Ellipse2d(
-        //                 new Pose2d(AutoConstants.BLUE_HUB, Rotation2d.k180deg)
-        //                         .transformBy(SUBZONE_CENTER_OFFSET),
-        //                 SUBZONE_X_SEMI_AXIS,
-        //                 SUBZONE_Y_SEMI_AXIS);
-
-        public static final Rectangle2d BLUE_ALLIANCE_ZONE =
-                new Rectangle2d(
-                        new Translation2d(),
-                        new Translation2d(
-                                AutoConstants.BLUE_HUB.getMeasureX().minus(ALLIANCE_ZONE_OFFSET), FIELD_WIDTH));
-
-        public static final Rectangle2d BLUE_SUB_ZONE =
-                new Rectangle2d(
-                        BLUE_ALLIANCE_ZONE
-                                .getCenter()
-                                .rotateAround(
-                                        BLUE_ALLIANCE_ZONE.getCenter().getTranslation(),
-                                        new Rotation2d(Degrees.of(45))),
-                        BLUE_HUB.getMeasureX().minus(BLUE_ALLIANCE_ZONE.getCenter().getMeasureX()),
-                        BLUE_HUB.getMeasureX().minus(BLUE_ALLIANCE_ZONE.getCenter().getMeasureX()));
-
-        // public static final Ellipse2d RED_SUB_ZONE =
-        //         new Ellipse2d(
-        //                 new Pose2d(AutoConstants.RED_HUB,
-        // Rotation2d.kZero).transformBy(SUBZONE_CENTER_OFFSET),
-        //                 SUBZONE_X_SEMI_AXIS,
-        //                 SUBZONE_Y_SEMI_AXIS);
-
-        public static final Rectangle2d RED_ALLIANCE_ZONE =
-                new Rectangle2d(
-                        new Translation2d(
-                                AutoConstants.RED_HUB.getMeasureX().plus(AutoConstants.BLUE_HUB.getMeasureX()),
-                                Meters.of(0.0)),
-                        new Translation2d(
-                                AutoConstants.RED_HUB.getMeasureX().plus(ALLIANCE_ZONE_OFFSET), FIELD_WIDTH));
-
-        public static final Rectangle2d RED_SUB_ZONE =
-                new Rectangle2d(
-                        RED_ALLIANCE_ZONE
-                                .getCenter()
-                                .rotateAround(
-                                        RED_ALLIANCE_ZONE.getCenter().getTranslation(), new Rotation2d(Degrees.of(45))),
-                        BLUE_HUB.getMeasureX().minus(BLUE_ALLIANCE_ZONE.getCenter().getMeasureX()),
-                        BLUE_HUB.getMeasureX().minus(BLUE_ALLIANCE_ZONE.getCenter().getMeasureX()));
-
-        /**
-         * Get the distance from the robot to our alliance hub
-         *
-         * @param robot the position of the robot on the field
-         * @return the distance from the robot to the hub
-         */
-        public static double distanceToHub(Pose2d robot) {
-            return getHubPosition().getDistance(robot.getTranslation());
-        }
-
-        public static Translation2d getHubPosition() {
-            return isRedAlliance() ? RED_HUB : BLUE_HUB;
-        }
-
         public static boolean isInZone(Pose2d robot, Rectangle2d zone) {
             return zone.contains(robot.getTranslation());
-        }
-
-        public static boolean isInAllianceZone(Pose2d robot) {
-            return (Constants.isRedAlliance() ? RED_ALLIANCE_ZONE : BLUE_ALLIANCE_ZONE)
-                    .contains(robot.getTranslation());
-        }
-
-        public static boolean isInSubZone(Pose2d robot) {
-            return (Constants.isRedAlliance()
-                    ? RED_ALLIANCE_ZONE.contains(robot.getTranslation())
-                            && RED_SUB_ZONE.contains(robot.getTranslation())
-                    : BLUE_ALLIANCE_ZONE.contains(robot.getTranslation())
-                            && BLUE_SUB_ZONE.contains(robot.getTranslation()));
         }
     }
 
@@ -344,18 +228,18 @@ public final class Constants {
         Positive pitch is actually pointed down, which is VERY important to remember.
         Positive roll is the camera rolling towards the robot's right side.
         */
-        // TODO camera transform is subject to change
-        private static final double camX = Units.inchesToMeters(+12.043);
-        private static final double camZ = Units.inchesToMeters(+20.181);
+        // TODO new measurements this year
+        private static final double camX = Units.inchesToMeters(-1);
+        private static final double camZ = Units.inchesToMeters(-1);
 
-        private static final double leftY = Units.inchesToMeters(+11.719);
-        private static final double rightY = Units.inchesToMeters(-11.719);
+        private static final double leftY = Units.inchesToMeters(-1);
+        private static final double rightY = Units.inchesToMeters(-1);
 
-        private static final Angle roll = Degrees.of(+0);
-        private static final Angle pitch = Degrees.of(-22);
+        private static final Angle roll = Degrees.of(-1);
+        private static final Angle pitch = Degrees.of(-1);
 
-        private static final Angle leftYaw = Degrees.of(-8.297);
-        private static final Angle rightYaw = Degrees.of(+8.297);
+        private static final Angle leftYaw = Degrees.of(-1);
+        private static final Angle rightYaw = Degrees.of(-1);
 
         public static final Transform3d LEFT_CAM_TO_ROBOT =
                 new Transform3d(camX, leftY, camZ, new Rotation3d(roll, pitch, leftYaw));
@@ -363,73 +247,7 @@ public final class Constants {
                 new Transform3d(camX, rightY, camZ, new Rotation3d(roll, pitch, rightYaw));
     }
 
-    public static boolean isHubActive() {
-        return isHubActive(0);
-    }
-
-    /**
-     * Is hub active in offset seconds?
-     *
-     * @param offset the number of seconds to look into the future
-     * @return if the hub is active
-     */
-    public static boolean isHubActive(int offset) {
-        final double matchTime = Timer.getMatchTime();
-        final String gameData = DriverStation.getGameSpecificMessage();
-        final var alliance = DriverStation.getAlliance();
-        return isHubActiveTest(matchTime - offset, gameData, alliance);
-    }
-
     public static boolean isRedAlliance() {
         return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue) == Alliance.Red;
-    }
-
-    private static boolean isHubActiveTest(
-            double matchTime, String gameData, Optional<Alliance> alliance) {
-        if (alliance.isEmpty()) {
-            return true;
-        }
-
-        final boolean isBlue = alliance.get().equals(Alliance.Blue);
-        if (matchTime <= 30) {
-            return true;
-            // auto and endgame
-        }
-        if (matchTime >= 130) {
-            return true;
-        }
-
-        boolean blueWonAuto;
-        if (gameData.length() == 0) {
-            // Use this for testing at home
-            return true;
-        }
-
-        switch (gameData.charAt(0)) {
-            case 'B':
-                blueWonAuto = true;
-                break;
-            case 'R':
-                blueWonAuto = false;
-                break;
-            default:
-                System.err.println("Bad game data");
-                return true;
-        }
-
-        if (matchTime >= 105) {
-            return blueWonAuto != isBlue;
-        }
-        if (matchTime >= 80) {
-            return blueWonAuto == isBlue;
-        }
-        if (matchTime >= 55) {
-            return blueWonAuto != isBlue;
-        }
-        if (matchTime >= 30) {
-            return blueWonAuto == isBlue;
-        }
-        System.err.println("wtf is happening");
-        return true;
     }
 }

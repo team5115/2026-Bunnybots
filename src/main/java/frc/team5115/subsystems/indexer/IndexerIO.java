@@ -12,8 +12,6 @@ public interface IndexerIO {
         public double appliedVolts = 0.0;
         public double currentAmps = 0.0;
         public double motorTemperature = 0.0;
-        public boolean leftSensor = false;
-        public boolean rightSensor = false;
     }
 
     /** Updates the set of loggable inputs. */
