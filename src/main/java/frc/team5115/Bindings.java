@@ -15,7 +15,6 @@ public class Bindings {
     private final CommandXboxController manipJoy;
 
     private final Drivetrain drivetrain;
-    private final Intake intake;
     
     private final Indexer indexer;
    
@@ -23,7 +22,6 @@ public class Bindings {
     public Bindings(
             Drivetrain drivetrain, Intake intake, Indexer indexer) {
         this.drivetrain = drivetrain;
-        this.intake = intake;
         this.indexer = indexer;
 
 
