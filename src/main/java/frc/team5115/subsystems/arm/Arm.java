@@ -29,9 +29,8 @@ public class Arm extends SubsystemBase {
     private Position position = Position.STOWED;
 
     public enum Position {
-        DEPLOYED(3),
-        SAFE_STOW(45),
-        STOWED(140);
+        DEPLOYED(0),
+        STOWED(0); // TODO: Put in constants
 
         public final Rotation2d rotation;
 
@@ -46,16 +45,16 @@ public class Arm extends SubsystemBase {
         switch (Constants.currentMode) {
             case REAL:
             case REPLAY:
-                ks = 1.0; // 5.464
+                ks = 0.0;
                 pid =
                         new PIDController(
-                                0.2, 0.0, 0.0); // 27.44 from sysid for kp (except its in the wrong units)
-                feedforward = new ArmFeedforward(ks, 0.0, 0.25, 0.0);
+                                0.0, 0.0, 0.0);
+                feedforward = new ArmFeedforward(ks, 0.0, 0.0, 0.0);
                 break;
             case SIM:
                 ks = 0.0;
-                feedforward = new ArmFeedforward(ks, 0.35, 0.1351, 0.0);
-                pid = new PIDController(0.5, 0.0, 0.0);
+                feedforward = new ArmFeedforward(ks, 0.0, 0.0, 0.0);
+                pid = new PIDController(0.0, 0.0, 0.0);
                 break;
             default:
                 ks = 0.0;
@@ -115,14 +114,6 @@ public class Arm extends SubsystemBase {
         return Commands.waitUntil(() -> pid.atSetpoint()).withTimeout(timeout);
     }
 
-    public Command waitForSafeToOuttake(double timeout) {
-        return Commands.waitUntil(() -> safeToOuttake()).withTimeout(timeout);
-    }
-
-    public boolean safeToOuttake() {
-        return inputs.armAngle.getDegrees() < 125;
-    }
-
     public Command setAngle(Position setpoint) {
         return Commands.runOnce(
                 () -> {
@@ -146,10 +137,6 @@ public class Arm extends SubsystemBase {
 
     public Command deploy() {
         return setAngle(Position.DEPLOYED);
-    }
-
-    public Command safeStow() {
-        return setAngle(Position.SAFE_STOW);
     }
 
     public void stop() {
