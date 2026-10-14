@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team5115.commands.DriveCommands;
+import frc.team5115.subsystems.arm.Arm;
 import frc.team5115.subsystems.drive.Drivetrain;
 import frc.team5115.subsystems.indexer.Indexer;
 import frc.team5115.subsystems.intake.Intake;
@@ -15,10 +16,14 @@ public class Bindings {
     private final CommandXboxController manipJoy;
 
     private final Drivetrain drivetrain;   
+    private final Intake intake;
+    private final Arm arm;
 
     public Bindings(
-            Drivetrain drivetrain, Intake intake, Indexer indexer) {
+            Drivetrain drivetrain, Intake intake, Indexer indexer, Arm arm) {
         this.drivetrain = drivetrain;
+        this.intake = intake;
+        this.arm = arm;
 
         // If in single mode, both Controller objects reference the controller on port 0
         driveJoy = new CommandXboxController(0);
@@ -53,8 +58,6 @@ public class Bindings {
                 .negate();
     }
 
-
-
     public void configureButtonBindings() {
         final Trigger slowMode = driveJoy.rightBumper();
 
@@ -76,6 +79,8 @@ public class Bindings {
         //                 () -> -driveJoy.getLeftX(),
         //                 () -> -driveJoy.getLeftY(),
         //                 () -> -driveJoy.getLeftX()));
+
+        manipJoy.y().whileTrue(arm.deploy().andThen(intake.intake())); // .onFalse(arm.stow());
 
         // Hold left bumper to drive robot relative
         driveJoy

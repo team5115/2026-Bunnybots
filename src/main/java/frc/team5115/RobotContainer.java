@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team5115.commands.AutoCommands;
+import frc.team5115.subsystems.arm.Arm;
+import frc.team5115.subsystems.arm.ArmIO;
+import frc.team5115.subsystems.arm.ArmIOSim;
+import frc.team5115.subsystems.arm.ArmIOSparkMax;
 import frc.team5115.subsystems.drive.Drivetrain;
 import frc.team5115.subsystems.drive.GyroIO;
 import frc.team5115.subsystems.drive.GyroIONavx;
@@ -43,7 +47,7 @@ public class RobotContainer {
     private final Drivetrain drivetrain;
     private final PhotonVision vision;
     private final Intake intake;
-    
+    private final Arm arm;
     private final Indexer indexer;
    
     private final RobotFaults faults;
@@ -72,7 +76,7 @@ public class RobotContainer {
                                 new ModuleIOSparkMax(3),
                                 (pose) -> {});
                 vision = new PhotonVision(new PhotonVisionIOReal(), drivetrain);
-               
+                arm = new Arm(new ArmIOSparkMax());
                 indexer = new Indexer(new IndexerIOSparkMax());
                
                 break;
@@ -91,6 +95,7 @@ public class RobotContainer {
                                 new ModuleIOSim(swerveSim.getModules()[3]),
                                 swerveSim::setSimulationWorldPose);
                 vision = new PhotonVision(new PhotonVisionIOSim(), drivetrain);
+                arm = new Arm(new ArmIOSim());
                 indexer = new Indexer(new IndexerIOSim());
                 break;
 
@@ -107,7 +112,7 @@ public class RobotContainer {
                                 new ModuleIO() {},
                                 (pose) -> {});
                 vision = new PhotonVision(new PhotonVisionIO() {}, drivetrain);
-                
+                arm = new Arm(new ArmIO() {});
                 indexer = new Indexer(new IndexerIO() {});
                 
                 break;
@@ -153,15 +158,13 @@ public class RobotContainer {
 
         
         final String targetKey = "HitTarget?";
-        final String linearKey = "Actuator Pos";
         SmartDashboard.putBoolean(targetKey, false);
-        SmartDashboard.putNumber(linearKey, 0.5);
         
         hitTargetSupplier = () -> SmartDashboard.getBoolean(targetKey, false);
         hitTargetConsumer = (v) -> SmartDashboard.putBoolean(targetKey, v);
 
         // Initialize bindings and robot faults
-        bindings = new Bindings(drivetrain, intake, indexer);
+        bindings = new Bindings(drivetrain, intake, indexer, arm);
         faults =
                 new RobotFaults(
                         drivetrain, vision, bindings::joysticksConnected, intake, indexer);
