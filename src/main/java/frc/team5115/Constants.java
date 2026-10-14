@@ -65,15 +65,15 @@ public final class Constants {
     public static final double INDEX_VOMIT_SPEED = -0.25;
 
     public static class SwerveConstants {
-        public static final byte FRONT_LEFT_DRIVE_ID = 6;
-        public static final byte FRONT_RIGHT_DRIVE_ID = 4;
-        public static final byte BACK_LEFT_DRIVE_ID = 10;
-        public static final byte BACK_RIGHT_DRIVE_ID = 8;
+        public static final byte FRONT_LEFT_DRIVE_ID = -1;
+        public static final byte FRONT_RIGHT_DRIVE_ID = -1;
+        public static final byte BACK_LEFT_DRIVE_ID = -1;
+        public static final byte BACK_RIGHT_DRIVE_ID = -1;
 
-        public static final byte FRONT_LEFT_TURN_ID = 5;
-        public static final byte FRONT_RIGHT_TURN_ID = 3;
-        public static final byte BACK_LEFT_TURN_ID = 9;
-        public static final byte BACK_RIGHT_TURN_ID = 7;
+        public static final byte FRONT_LEFT_TURN_ID = -1;
+        public static final byte FRONT_RIGHT_TURN_ID = -1;
+        public static final byte BACK_LEFT_TURN_ID = -1;
+        public static final byte BACK_RIGHT_TURN_ID = -1;
 
         private static RobotConfig ROBOT_CONFIG = null;
 
@@ -92,10 +92,9 @@ public final class Constants {
         public static final double MAX_LINEAR_ACCEL = 9.81; // m/s^2, used for driver velocity slewing
         public static final double MAX_AUTOALIGN_LINEAR_SPEED = 4.0; // m/s
 
-        // 29" wide, 25.75" front to back
         // ! Reminder that X is front-back, Y is left-right
-        private static final Distance FRAME_WIDTH_X = Inches.of(25.625);
-        private static final Distance FRAME_WIDTH_Y = Inches.of(29);
+        private static final Distance FRAME_WIDTH_X = Inches.of(27 + 1/16);
+        private static final Distance FRAME_WIDTH_Y = Inches.of(26 + 11/16);
         private static final Distance BUMPER_DEPTH = Inches.of(3);
 
         public static final Distance BUMPER_WIDTH_X = FRAME_WIDTH_X.plus(BUMPER_DEPTH.times(2));
@@ -153,7 +152,7 @@ public final class Constants {
         public static final double LINEAR_PID_TOLERANCE = 0.04;
         public static final PIDConstants LINEAR_PID_CONSTANTS =
                 new PIDConstants(
-                        1.9 * SwerveConstants.MAX_AUTOALIGN_LINEAR_SPEED,
+                        2.0 * SwerveConstants.MAX_AUTOALIGN_LINEAR_SPEED,
                         0.0 * SwerveConstants.MAX_AUTOALIGN_LINEAR_SPEED,
                         0.0 * SwerveConstants.MAX_AUTOALIGN_LINEAR_SPEED,
                         SwerveConstants.MAX_AUTOALIGN_LINEAR_SPEED * 0.5);
@@ -187,6 +186,7 @@ public final class Constants {
         public static final AprilTagFieldLayout FIELD_LAYOUT = loadCustomFieldLayout();
 
         // * Camera sim values
+        // TODO: Update camera values
         public static final int WIDTH_PX = 1280;
         public static final int HEIGHT_PX = 720;
         public static final double DIAG_FOV_DEGREES = 90;
