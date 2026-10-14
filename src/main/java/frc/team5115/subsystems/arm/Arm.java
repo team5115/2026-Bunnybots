@@ -93,7 +93,6 @@ public class Arm extends SubsystemBase {
         Logger.recordOutput("Arm/Real Degrees", inputs.armAngle.getDegrees());
         Logger.recordOutput("Arm/Setpoint Degrees", pid.getSetpoint());
         Logger.recordOutput("Arm/At Setpoint?", pid.atSetpoint());
-        Logger.recordOutput("Arm/Filtered Sensor", this.filterTrigger.getAsBoolean());
 
         // Update the pids and feedforward
         final double speed =

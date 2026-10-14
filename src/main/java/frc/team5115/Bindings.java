@@ -80,7 +80,7 @@ public class Bindings {
         //                 () -> -driveJoy.getLeftY(),
         //                 () -> -driveJoy.getLeftX()));
 
-        manipJoy.y().whileTrue(arm.deploy().andThen(intake.intake())); // .onFalse(arm.stow());
+        manipJoy.y().onTrue((arm.deploy().andThen(intake.intake()))); //.onFalse(arm.stow().alongWith(intake.stop()));
 
         // Hold left bumper to drive robot relative
         driveJoy
