@@ -78,8 +78,8 @@ public class Arm extends SubsystemBase {
  
     }
 
-    public void getSparks(ArrayList<SparkMax> sparks) {
-        io.getSparks(sparks);
+    public ArrayList<SparkMax> getSparks() {
+        return io.getSparks();
     }
 
     @Override

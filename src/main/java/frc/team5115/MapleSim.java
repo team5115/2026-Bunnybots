@@ -8,8 +8,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team5115.Constants.AutoConstants;
 import frc.team5115.Constants.SwerveConstants;
 import frc.team5115.subsystems.indexer.Indexer;
@@ -27,11 +25,6 @@ import org.littletonrobotics.junction.Logger;
 public class MapleSim {
     private static SwerveDriveSimulation swerveSim;
     private static IntakeSimulation intakeSimulation;
-
-    private static final double shotFrequency = 4;
-    private static final double shotCooldown = 1d / shotFrequency;
-    private static final Timer shotTimer = new Timer();
-    private static Trigger indexing;
 
     public static void initializeArena() {
         final boolean startRed = false;
@@ -67,12 +60,6 @@ public class MapleSim {
             intakeSimulation.startIntake();
         } else {
             intakeSimulation.stopIntake();
-        }
-
-        if (indexing.getAsBoolean()
-                && shotTimer.get() >= shotCooldown
-                && intakeSimulation.obtainGamePieceFromIntake()) {
-            
         }
 
         Logger.recordOutput("FieldSimulation/RobotPosition", swerveSim.getSimulatedDriveTrainPose());

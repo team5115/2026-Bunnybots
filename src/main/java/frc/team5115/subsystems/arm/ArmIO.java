@@ -2,6 +2,8 @@ package frc.team5115.subsystems.arm;
 
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.team5115.util.InterfaceReplayCheck;
+
 import java.util.ArrayList;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -14,9 +16,16 @@ public interface ArmIO {
         public double appliedVolts = 0;
     }
 
-    public default void updateInputs(ArmIOInputs inputs) {}
+    public default void updateInputs(ArmIOInputs inputs) {
+        InterfaceReplayCheck.warnOnNotReplay();
+    }
 
-    public default void setArmVoltage(double volts) {}
+    public default void setArmVoltage(double volts) {
+        InterfaceReplayCheck.warnOnNotReplay();
+    }
 
-    public default void getSparks(ArrayList<SparkMax> sparks) {}
+    public default ArrayList<SparkMax> getSparks() {
+        InterfaceReplayCheck.warnOnNotReplay();
+        return new ArrayList<>();
+    }
 }

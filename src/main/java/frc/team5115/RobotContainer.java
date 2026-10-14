@@ -81,7 +81,6 @@ public class RobotContainer {
                 MapleSim.initializeArena();
                 final var swerveSim = MapleSim.getSwerveSim();
                 gyro = new GyroIOSim(swerveSim.getGyroSimulation());
-
                 intake = new Intake(new IntakeIOSim());
                 drivetrain =
                         new Drivetrain(
@@ -92,11 +91,7 @@ public class RobotContainer {
                                 new ModuleIOSim(swerveSim.getModules()[3]),
                                 swerveSim::setSimulationWorldPose);
                 vision = new PhotonVision(new PhotonVisionIOSim(), drivetrain);
-                
                 indexer = new Indexer(new IndexerIOSim());
-               
-
-                
                 break;
 
             default:
