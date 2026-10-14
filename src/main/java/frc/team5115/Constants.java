@@ -93,8 +93,8 @@ public final class Constants {
         public static final double MAX_AUTOALIGN_LINEAR_SPEED = 4.0; // m/s
 
         // ! Reminder that X is front-back, Y is left-right
-        private static final Distance FRAME_WIDTH_X = Inches.of(27 + 1/16);
-        private static final Distance FRAME_WIDTH_Y = Inches.of(26 + 11/16);
+        private static final Distance FRAME_WIDTH_X = Inches.of(27 + 1 / 16);
+        private static final Distance FRAME_WIDTH_Y = Inches.of(26 + 11 / 16);
         private static final Distance BUMPER_DEPTH = Inches.of(3);
 
         public static final Distance BUMPER_WIDTH_X = FRAME_WIDTH_X.plus(BUMPER_DEPTH.times(2));

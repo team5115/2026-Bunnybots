@@ -15,12 +15,11 @@ public class Bindings {
     private final CommandXboxController driveJoy;
     private final CommandXboxController manipJoy;
 
-    private final Drivetrain drivetrain;   
+    private final Drivetrain drivetrain;
     private final Intake intake;
     private final Arm arm;
 
-    public Bindings(
-            Drivetrain drivetrain, Intake intake, Indexer indexer, Arm arm) {
+    public Bindings(Drivetrain drivetrain, Intake intake, Indexer indexer, Arm arm) {
         this.drivetrain = drivetrain;
         this.intake = intake;
         this.arm = arm;
@@ -80,7 +79,11 @@ public class Bindings {
         //                 () -> -driveJoy.getLeftY(),
         //                 () -> -driveJoy.getLeftX()));
 
-        manipJoy.y().onTrue((arm.deploy().andThen(intake.intake()))); //.onFalse(arm.stow().alongWith(intake.stop()));
+        manipJoy
+                .y()
+                .onTrue(
+                        (arm.deploy()
+                                .andThen(intake.intake()))); // .onFalse(arm.stow().alongWith(intake.stop()));
 
         // Hold left bumper to drive robot relative
         driveJoy
@@ -97,18 +100,17 @@ public class Bindings {
         driveJoy.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));
         driveJoy.start().onTrue(offsetGyro());
 
-
         driveJoy.povUp().onTrue(Commands.runOnce(drivetrain::humanOverrideLimit));
         driveJoy.povDown().onTrue(Commands.runOnce(drivetrain::setTeleopCurrentLimits));
     }
 
-//     private Command rumble(double value) {
-//         return Commands.runOnce(
-//                 () -> {
-//                     driveJoy.setRumble(GenericHID.RumbleType.kBothRumble, value);
-//                     if (manipJoy != null) {
-//                         manipJoy.setRumble(GenericHID.RumbleType.kBothRumble, value);
-//                     }
-//                 });
-//     }
+    //     private Command rumble(double value) {
+    //         return Commands.runOnce(
+    //                 () -> {
+    //                     driveJoy.setRumble(GenericHID.RumbleType.kBothRumble, value);
+    //                     if (manipJoy != null) {
+    //                         manipJoy.setRumble(GenericHID.RumbleType.kBothRumble, value);
+    //                     }
+    //                 });
+    //     }
 }

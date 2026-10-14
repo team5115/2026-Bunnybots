@@ -16,7 +16,6 @@ public class ArmIOSparkMax implements ArmIO {
 
     private final AbsoluteEncoder absoluteEncoder;
 
-
     public ArmIOSparkMax() {
         motor = new SparkMax(Constants.ARM_MOTOR_ID, MotorType.kBrushless);
         absoluteEncoder = motor.getAbsoluteEncoder();

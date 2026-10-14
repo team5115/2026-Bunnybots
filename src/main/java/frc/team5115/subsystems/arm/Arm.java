@@ -46,9 +46,7 @@ public class Arm extends SubsystemBase {
             case REAL:
             case REPLAY:
                 ks = 0.0;
-                pid =
-                        new PIDController(
-                                0.0, 0.0, 0.0);
+                pid = new PIDController(0.0, 0.0, 0.0);
                 feedforward = new ArmFeedforward(ks, 0.0, 0.0, 0.0);
                 break;
             case SIM:
@@ -75,7 +73,6 @@ public class Arm extends SubsystemBase {
                                 (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
                         new SysIdRoutine.Mechanism(
                                 (voltage) -> io.setArmVoltage(voltage.magnitude()), null, this));
- 
     }
 
     public ArrayList<SparkMax> getSparks() {

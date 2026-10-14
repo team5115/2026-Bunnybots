@@ -49,9 +49,7 @@ public class MapleSim {
         intakeSimulation.setGamePiecesCount(8);
     }
 
-    public static void initializeTriggers(Indexer indexer) {
-        
-    }
+    public static void initializeTriggers(Indexer indexer) {}
 
     public static void simPeriodic(Intake intake, Indexer indexer) {
         SimulatedArena.getInstance().simulationPeriodic();
@@ -88,10 +86,6 @@ public class MapleSim {
                 KilogramSquareMeters.of(0.005), // Steer MOI
                 1.2); // Wheel COF
     }
-
-    
-
-    
 
     public static SwerveDriveSimulation getSwerveSim() {
         return swerveSim;

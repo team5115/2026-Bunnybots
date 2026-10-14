@@ -30,10 +30,6 @@ public class AutoCommands {
         return Commands.idle();
     }
 
-
-
-   
-
     /**
      * Measures the velocity feedforward constants for the drive motors.
      *

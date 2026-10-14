@@ -1,6 +1,5 @@
 package frc.team5115;
 
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.util.function.BooleanConsumer;
@@ -49,7 +48,7 @@ public class RobotContainer {
     private final Intake intake;
     private final Arm arm;
     private final Indexer indexer;
-   
+
     private final RobotFaults faults;
     // Controllers
     private final Bindings bindings;
@@ -78,7 +77,7 @@ public class RobotContainer {
                 vision = new PhotonVision(new PhotonVisionIOReal(), drivetrain);
                 arm = new Arm(new ArmIOSparkMax());
                 indexer = new Indexer(new IndexerIOSparkMax());
-               
+
                 break;
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
@@ -114,7 +113,7 @@ public class RobotContainer {
                 vision = new PhotonVision(new PhotonVisionIO() {}, drivetrain);
                 arm = new Arm(new ArmIO() {});
                 indexer = new Indexer(new IndexerIO() {});
-                
+
                 break;
         }
 
@@ -154,20 +153,16 @@ public class RobotContainer {
         autoChooser.addOption("In-Code Drive FF", AutoCommands.feedforwardCharacterization(drivetrain));
         autoChooser.addOption("Translate All SysIds", drivetrain.translateAllSysIds());
         autoChooser.addOption("Spin All SysIds", drivetrain.spinAllSysIds());
-        
 
-        
         final String targetKey = "HitTarget?";
         SmartDashboard.putBoolean(targetKey, false);
-        
+
         hitTargetSupplier = () -> SmartDashboard.getBoolean(targetKey, false);
         hitTargetConsumer = (v) -> SmartDashboard.putBoolean(targetKey, v);
 
         // Initialize bindings and robot faults
         bindings = new Bindings(drivetrain, intake, indexer, arm);
-        faults =
-                new RobotFaults(
-                        drivetrain, vision, bindings::joysticksConnected, intake, indexer);
+        faults = new RobotFaults(drivetrain, vision, bindings::joysticksConnected, intake, indexer);
 
         bindings.configureButtonBindings();
     }
@@ -187,8 +182,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.get();
     }
-
-    
 
     public void robotPeriodic() {
         if (hitTargetSupplier.getAsBoolean()) {
