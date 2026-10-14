@@ -162,14 +162,15 @@ public class RobotContainer {
 
         // Initialize bindings and robot faults
         bindings = new Bindings(drivetrain, intake, indexer, arm);
-        faults = new RobotFaults(drivetrain, vision, bindings::joysticksConnected, intake, indexer);
+        faults =
+                new RobotFaults(drivetrain, vision, bindings::joysticksConnected, intake, indexer, arm);
 
         bindings.configureButtonBindings();
     }
 
     /** Register commands for pathplanner to use in autos. */
     private void registerCommands() {
-        NamedCommands.registerCommand("Intake", AutoCommands.intake(intake, indexer));
+        NamedCommands.registerCommand("Intake", AutoCommands.intake(intake, arm));
 
         System.out.println("Registered Commands");
     }

@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team5115.Constants.SwerveConstants;
+import frc.team5115.subsystems.arm.Arm;
+import frc.team5115.subsystems.arm.Arm.Position;
 import frc.team5115.subsystems.drive.Drivetrain;
-import frc.team5115.subsystems.indexer.Indexer;
 import frc.team5115.subsystems.intake.Intake;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -26,8 +27,8 @@ public class AutoCommands {
     private AutoCommands() {}
 
     /** Intake while agitating and rejecting with indexer */
-    public static Command intake(Intake intake, Indexer indexer) {
-        return Commands.idle();
+    public static Command intake(Intake intake, Arm arm) {
+        return arm.setAngle(Position.DEPLOYED).andThen(intake.intake());
     }
 
     /**
