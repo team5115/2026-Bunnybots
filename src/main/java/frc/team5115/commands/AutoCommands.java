@@ -31,6 +31,10 @@ public class AutoCommands {
         return arm.setAngle(Position.DEPLOYED).andThen(intake.intake());
     }
 
+    public static Command deposit() {
+        return null;
+    }
+
     /**
      * Measures the velocity feedforward constants for the drive motors.
      *
