@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.126737374809775,
-        "y": 2.6560465735250847
+        "x": 6.195321790022624,
+        "y": 3.049223529823568
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.463704887955952,
-        "y": 2.5122739264295455
+        "x": 6.490791986593547,
+        "y": 3.0631389969140437
       },
       "isLocked": false,
-      "linkedName": "3rd carrot end"
+      "linkedName": "Eaten 3rd Carrot"
     },
     {
       "anchor": {
-        "x": 1.9650937204850236,
-        "y": 3.359110377614808
+        "x": 2.3279637448015356,
+        "y": 3.278204319404498
       },
       "prevControl": {
-        "x": 2.9867870079014343,
-        "y": 3.1545970391043348
+        "x": 3.916933786767209,
+        "y": 3.071794884083664
       },
       "nextControl": {
-        "x": 1.6109105577427814,
-        "y": 3.4300075655955413
+        "x": 1.0546844086748588,
+        "y": 3.4436050896106307
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.5171954613419397,
-        "y": 3.148734416812883
+        "x": 0.5643862018608075,
+        "y": 3.15315828055856
       },
       "prevControl": {
-        "x": 0.20253237594558182,
-        "y": 3.0653071348129792
+        "x": 0.32645065908884174,
+        "y": 3.0241770373872447
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Oven"
     }
   ],
   "rotationTargets": [],
@@ -64,7 +64,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.38465028893194
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
