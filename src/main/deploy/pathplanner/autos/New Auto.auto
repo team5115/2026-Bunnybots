@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Deposit"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Start to UpperRight"
@@ -33,6 +39,12 @@
           "type": "path",
           "data": {
             "pathName": "Bottom Carrot to Oven"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Deposit"
           }
         }
       ]
