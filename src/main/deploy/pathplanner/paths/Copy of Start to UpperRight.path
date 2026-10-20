@@ -1,0 +1,63 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 15.936,
+        "y": 3.15315828055856
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 16.41297072546809,
+        "y": 3.3810307569700244
+      },
+      "isLocked": false,
+      "linkedName": "Oven R"
+    },
+    {
+      "anchor": {
+        "x": 11.238,
+        "y": 5.907621366355485
+      },
+      "prevControl": {
+        "x": 11.551024708904817,
+        "y": 6.070397992255821
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -45.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 14.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 134.911
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}
