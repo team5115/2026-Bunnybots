@@ -52,6 +52,6 @@ public class Intake extends SubsystemBase implements MotorContainer {
 
     @AutoLogOutput
     public boolean isVomiting() {
-        return inputs.velocityRPM < 50;
+        return inputs.velocityRPM < -50;
     }
 }

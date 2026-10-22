@@ -3,51 +3,7 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Deposit"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Start to UpperRight"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Upper Right Down 3 Carrots"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Bottom Carrot to Oven"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Deposit"
-          }
-        }
-      ]
+      "commands": []
     }
   },
   "resetOdom": true,
