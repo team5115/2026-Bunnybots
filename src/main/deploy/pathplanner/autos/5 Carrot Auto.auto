@@ -1,0 +1,56 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Deposit"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start to UpperRight"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Upper Right Down 3 Carrots"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3rd Carrot to Oven V"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Deposit"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "pathplanner",
+  "choreoAuto": false
+}

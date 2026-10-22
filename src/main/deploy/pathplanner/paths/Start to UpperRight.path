@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5643862018608075,
+        "x": 0.564,
         "y": 3.15315828055856
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.041356927328895,
+        "x": 1.0409707254680873,
         "y": 3.3810307569700244
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Oven"
     },
     {
       "anchor": {
