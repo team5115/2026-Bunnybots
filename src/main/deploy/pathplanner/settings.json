@@ -2,10 +2,14 @@
   "robotWidth": 0.851,
   "robotLength": 0.851,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Red",
+    "Blue"
+  ],
   "autoFolders": [
-    "testing choreo",
-    "pathplanner"
+    "pathplanner R",
+    "pathplanner B",
+    "testing choreo"
   ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 14.0,

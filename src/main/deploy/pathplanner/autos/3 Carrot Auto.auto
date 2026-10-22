@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Oven to 3rd Carrot"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -19,14 +13,14 @@
                 "data": {
                   "name": "Intake"
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Oven to Eat 3rd Carrot"
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Eat 3rd Carrot"
           }
         },
         {
@@ -38,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Deposit"
+            "name": "Deposit Oven"
           }
         },
         {
@@ -51,6 +45,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "pathplanner",
+  "folder": "pathplanner B",
   "choreoAuto": false
 }

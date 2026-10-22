@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0409707254680873,
-        "y": 3.3810307569700244
+        "x": 0.8167627073285912,
+        "y": 3.2783120151136225
       },
       "isLocked": false,
       "linkedName": "Oven"
@@ -20,24 +20,15 @@
         "y": 5.907621366355485
       },
       "prevControl": {
-        "x": 5.574981142156124,
-        "y": 6.070397992255821
+        "x": 5.9460477739029605,
+        "y": 6.304147156218333
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "top"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 1,
-      "rotationDegrees": -45.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -54,10 +45,10 @@
     "rotation": -45.0890030810521
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Blue",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }
