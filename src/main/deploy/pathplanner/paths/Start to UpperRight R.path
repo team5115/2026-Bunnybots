@@ -3,41 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 15.936,
+        "x": 15.963,
         "y": 3.15315828055856
       },
       "prevControl": null,
       "nextControl": {
-        "x": 16.41297072546809,
-        "y": 3.3810307569700244
+        "x": 15.750449625132454,
+        "y": 3.2847726344249453
       },
       "isLocked": false,
       "linkedName": "Oven R"
     },
     {
       "anchor": {
-        "x": 11.313333994418963,
-        "y": 5.064427065460418
+        "x": 11.238,
+        "y": 5.907621366355485
       },
       "prevControl": {
-        "x": 11.626358703323781,
-        "y": 5.227203691360754
+        "x": 10.769842597009626,
+        "y": 6.175540097856914
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Top R"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 1,
-      "rotationDegrees": -45.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -50,8 +41,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 180.0
+    "velocity": 0,
+    "rotation": -135.0
   },
   "reversed": false,
   "folder": "Red",

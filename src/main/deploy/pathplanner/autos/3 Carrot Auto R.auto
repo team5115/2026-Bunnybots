@@ -1,0 +1,50 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Oven to Eat 3rd Carrot R"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3rd Carrot to Oven H R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Deposit Oven"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Oven to Bottom Center R"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "pathplanner R",
+  "choreoAuto": false
+}

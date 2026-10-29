@@ -1,0 +1,100 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 15.963,
+        "y": 3.15315828055856
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 15.713479456703329,
+        "y": 3.1376825423553467
+      },
+      "isLocked": false,
+      "linkedName": "Oven R"
+    },
+    {
+      "anchor": {
+        "x": 14.346,
+        "y": 3.2929183114709635
+      },
+      "prevControl": {
+        "x": 14.952676100976152,
+        "y": 3.293540039818186
+      },
+      "nextControl": {
+        "x": 13.217824267198601,
+        "y": 3.2917621445598177
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 11.091,
+        "y": 3.049223529823568
+      },
+      "prevControl": {
+        "x": 11.340943267073108,
+        "y": 3.0545492452515983
+      },
+      "nextControl": {
+        "x": 10.451238963517877,
+        "y": 3.035591695439131
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 10.285,
+        "y": 3.049223529823568
+      },
+      "prevControl": {
+        "x": 11.562762086780163,
+        "y": 3.186598165311169
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Eaten 3rd Carrot R"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.8048128342245984,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 14.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 14.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Red",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

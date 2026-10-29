@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.564,
-        "y": 3.15315828055856
+        "x": 10.373,
+        "y": 2.6560465735250847
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.8167627073285912,
-        "y": 3.2783120151136225
+        "x": 10.779492508553455,
+        "y": 2.526401560054387
+      },
+      "isLocked": false,
+      "linkedName": "3rd Carrot End R"
+    },
+    {
+      "anchor": {
+        "x": 14.296,
+        "y": 3.34862128143687
+      },
+      "prevControl": {
+        "x": 14.857683178915364,
+        "y": 3.376533546512449
+      },
+      "nextControl": {
+        "x": 13.956795656292401,
+        "y": 3.331764872144647
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.2619564332513065,
-        "y": 5.907621366355485
+        "x": 15.963,
+        "y": 3.15315828055856
       },
       "prevControl": {
-        "x": 5.9460477739029605,
-        "y": 6.304147156218333
+        "x": 15.651164992686331,
+        "y": 3.2765671211245015
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "top"
+      "linkedName": "Oven R"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -45.0890030810521
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "Red",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -90.38465028893194
   },
   "useDefaultConstraints": true
 }
