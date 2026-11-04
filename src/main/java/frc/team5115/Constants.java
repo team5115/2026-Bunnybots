@@ -172,7 +172,7 @@ public final class Constants {
             try {
                 return new AprilTagFieldLayout(
                         Filesystem.getDeployDirectory().getAbsolutePath()
-                                + "/apriltag-fields/custom-2026-rebuilt-andymark.json");
+                                + "/apriltag-fields/2026-bunnybots-tags.json");
             } catch (java.io.IOException e) {
                 e.printStackTrace();
                 return loadFullField();

@@ -61,6 +61,9 @@ public class ModuleIOSim implements ModuleIO {
     }
 
     @Override
+    public void setDriveCurrentLimit(int amps) {}
+
+    @Override
     public void setTurnVoltage(double volts) {
         turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
         turnSim.requestVoltage(Volts.of(turnAppliedVolts));
