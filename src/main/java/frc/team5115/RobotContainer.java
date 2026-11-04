@@ -172,7 +172,7 @@ public class RobotContainer {
     private void registerCommands() {
         NamedCommands.registerCommand("Intake", AutoCommands.intake(intake, arm));
 
-        NamedCommands.registerCommand("Deposit", AutoCommands.deposit());
+        NamedCommands.registerCommand("Deposit Oven", AutoCommands.deposit(intake, arm));
 
         System.out.println("Registered Commands");
     }

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team5115.Constants.SwerveConstants;
 import frc.team5115.subsystems.arm.Arm;
-import frc.team5115.subsystems.arm.Arm.Position;
 import frc.team5115.subsystems.drive.Drivetrain;
 import frc.team5115.subsystems.intake.Intake;
 import java.text.DecimalFormat;
@@ -26,13 +25,12 @@ public class AutoCommands {
 
     private AutoCommands() {}
 
-    /** Intake while agitating and rejecting with indexer */
     public static Command intake(Intake intake, Arm arm) {
-        return arm.setAngle(Position.INTAKE).andThen(intake.intake());
+        return arm.intake().andThen(intake.intake());
     }
 
-    public static Command deposit() {
-        return null;
+    public static Command deposit(Intake intake, Arm arm) {
+        return arm.oven().andThen(intake.vomit());
     }
 
     /**
