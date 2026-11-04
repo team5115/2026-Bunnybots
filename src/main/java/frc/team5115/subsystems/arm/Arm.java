@@ -30,8 +30,10 @@ public class Arm extends SubsystemBase implements MotorContainer {
     private Position position = Position.STOWED;
 
     public enum Position {
-        DEPLOYED(0),
-        STOWED(0); // TODO: Put in constants
+        INTAKE(0),
+        STOWED(0),
+        OVEN(0),
+        PANTRY(0);// TODO: Put in constants
 
         public final Rotation2d rotation;
 
@@ -132,8 +134,16 @@ public class Arm extends SubsystemBase implements MotorContainer {
         return setAngle(Position.STOWED);
     }
 
-    public Command deploy() {
-        return setAngle(Position.DEPLOYED);
+    public Command intake() {
+        return setAngle(Position.INTAKE);
+    }
+
+    public Command oven(){
+        return setAngle(Position.OVEN);
+    }
+
+    public Command pantry(){
+        return setAngle(Position.PANTRY);
     }
 
     public void stop() {

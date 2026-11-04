@@ -54,4 +54,5 @@ public class Intake extends SubsystemBase implements MotorContainer {
     public boolean isVomiting() {
         return inputs.velocityRPM < 50;
     }
+
 }

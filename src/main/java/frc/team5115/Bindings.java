@@ -82,9 +82,25 @@ public class Bindings {
         manipJoy
                 .y()
                 .onTrue(
-                        (arm.deploy()
-                                .andThen(intake.intake()))); // .onFalse(arm.stow().alongWith(intake.stop()));
+                        (arm.intake()
+                                .andThen(intake.intake())));
+        manipJoy
+                .povDown()
+                .onTrue(
+                        (arm.intake()
+                                .andThen(intake.vomit())));
 
+        manipJoy
+                .b().onTrue(arm.oven());
+
+        manipJoy
+                .a().onTrue(arm.pantry());
+
+        manipJoy
+                .x().onTrue(arm.stow());
+        
+        manipJoy
+                .rightTrigger().onTrue(intake.vomit());
         // Hold left bumper to drive robot relative
         driveJoy
                 .leftBumper()
