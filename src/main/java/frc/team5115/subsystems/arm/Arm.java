@@ -33,7 +33,7 @@ public class Arm extends SubsystemBase implements MotorContainer {
         INTAKE(0),
         STOWED(0),
         OVEN(0),
-        PANTRY(0);// TODO: Put in constants
+        PANTRY(0); // TODO: Put in constants
 
         public final Rotation2d rotation;
 
@@ -138,11 +138,11 @@ public class Arm extends SubsystemBase implements MotorContainer {
         return setAngle(Position.INTAKE);
     }
 
-    public Command oven(){
+    public Command oven() {
         return setAngle(Position.OVEN);
     }
 
-    public Command pantry(){
+    public Command pantry() {
         return setAngle(Position.PANTRY);
     }
 

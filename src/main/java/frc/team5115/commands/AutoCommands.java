@@ -28,7 +28,7 @@ public class AutoCommands {
 
     /** Intake while agitating and rejecting with indexer */
     public static Command intake(Intake intake, Arm arm) {
-        return arm.setAngle(Position.DEPLOYED).andThen(intake.intake());
+        return arm.setAngle(Position.INTAKE).andThen(intake.intake());
     }
 
     public static Command deposit() {
