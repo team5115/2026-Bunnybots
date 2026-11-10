@@ -159,7 +159,16 @@ public final class Constants {
     }
 
     public static class AutoConstants {
+        public static final double MAX_AUTOALIGN_LINEAR_SPEED = 4.0; // m/s
+
         public static final Mass ROBOT_MASS = Pounds.of(83); // TODO update weight estimation
+        
+        public static final Translation2d BLUE_OVEN = new Translation2d(0, 0);
+        public static final Translation2d RED_OVEN = new Translation2d(0, 0);
+        
+        public static Translation2d getOvenPosition() {
+            return isRedAlliance() ? RED_OVEN : BLUE_OVEN;
+        }
 
         public static boolean isInZone(Pose2d robot, Rectangle2d zone) {
             return zone.contains(robot.getTranslation());

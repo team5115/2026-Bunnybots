@@ -5,20 +5,26 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team5115.Constants;
+import frc.team5115.Constants.AutoConstants;
 import frc.team5115.Constants.SwerveConstants;
 import frc.team5115.Constants.SwerveConstants.DriveMotorCurrentLimit;
 import frc.team5115.Constants.VisionConstants;
@@ -35,6 +42,8 @@ import frc.team5115.util.LocalADStarAK;
 import frc.team5115.util.MotorContainer;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -65,7 +74,24 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
                     new TrapezoidProfile.Constraints(
                             SwerveConstants.MAX_ANGULAR_SPEED, SwerveConstants.MAX_ANGULAR_SPEED * 2));
 
-    @AutoLogOutput private boolean orbitting = true;
+    // TODO tune drive pids
+    private final double linear_kp = 1.9 * AutoConstants.MAX_AUTOALIGN_LINEAR_SPEED;
+    private final double linear_ki = 0.125 * AutoConstants.MAX_AUTOALIGN_LINEAR_SPEED;
+    private final double linear_kd = 0.5 * AutoConstants.MAX_AUTOALIGN_LINEAR_SPEED;
+    private final double angular_kp = 0.5 * SwerveConstants.MAX_ANGULAR_SPEED;
+    private final double angular_ki = 0.0 * SwerveConstants.MAX_ANGULAR_SPEED;
+    private final double angular_kd = 0.0 * SwerveConstants.MAX_ANGULAR_SPEED;
+
+    private final double linearPidTolerence = 0.04;
+
+    private final ProfiledPIDController anglePid =
+            new ProfiledPIDController(
+                    angular_kp,
+                    angular_ki,
+                    angular_kd,
+                    new TrapezoidProfile.Constraints(
+                            SwerveConstants.MAX_ANGULAR_SPEED, SwerveConstants.MAX_ANGULAR_SPEED * 2));
+    private final PIDController translationPid = new PIDController(linear_kp, linear_ki, linear_kd);
 
     private final SwerveDriveKinematics kinematics =
             new SwerveDriveKinematics(SwerveConstants.MODULE_TRANSLATIONS);
@@ -109,7 +135,7 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
                 this::getPose,
                 this::setPose,
                 () -> getChassisSpeeds(),
-                (var speeds, var feedforwards) -> runVelocity(speeds, false, false),
+                (var speeds, var feedforwards) -> runVelocity(speeds, false),
                 new PPHolonomicDriveController(
                         SwerveConstants.LINEAR_PID_CONSTANTS, SwerveConstants.ANGULAR_PID_CONSTANTS),
                 SwerveConstants.getRobotConfig(),
@@ -350,6 +376,26 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
         field.setRobotPose(getPose());
     }
 
+    @AutoLogOutput(key = "Drive/IsRedAlliance")
+    public boolean isRedAlliance() {
+        return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue) == Alliance.Red;
+    }
+
+    @AutoLogOutput(key = "AutoAlign/SelectedPose")
+    private Pose2d selectedPose = null;
+
+    @AutoLogOutput(key = "AutoAlign/Aligning?")
+    private boolean aligning = false;
+
+    @AutoLogOutput(key = "AutoAlign/AtGoal")
+    private boolean alignedAtGoal() {
+        final ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+        final double linearSpeed =
+                Math.pow(chassisSpeeds.vxMetersPerSecond, 2)
+                        + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2);
+        return translationPid.atSetpoint() && anglePid.atGoal() && linearSpeed < 0.1;
+    }
+
     public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }
@@ -361,8 +407,7 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
      * @param orbitting is this an orbit velocity?
      * @param slew should we limit the acceleration?
      */
-    public void runVelocity(ChassisSpeeds speeds, boolean orbitting, boolean slew) {
-        this.orbitting = orbitting;
+    public void runVelocity(ChassisSpeeds speeds, boolean slew) {
         Logger.recordOutput("ChassisSpeeds/Input", speeds);
 
         if (slew && !DriverStation.isAutonomousEnabled()) {
@@ -403,7 +448,7 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
 
     /** Stops the drive. */
     public void stop() {
-        runVelocity(new ChassisSpeeds(), false, false);
+        runVelocity(new ChassisSpeeds(), false);
     }
 
     /**
@@ -526,6 +571,50 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
     /** Set the gyro rotation angle to be zero in the current direction minus {@code offset}. */
     public void zeroGyro(Rotation2d offset) {
         gyroOffset = rawGyroRotation.minus(offset);
+    }
+
+    public Command alignToOven() {
+        return alignByPids(() -> new Pose2d(Units.Inches.of(18), Units.Inches.of(217.969), new Rotation2d(0.0)));
+        // TODO x = 633.223in for BLUE pose
+    }
+
+    private Command alignByPids(Supplier<Pose2d> goalSupplier) {
+        return Commands.runEnd(
+                () -> {
+                    aligning = true;
+                    final var goalPose = goalSupplier.get();
+                    final var pose = getPose();
+
+                    final var omega =
+                            anglePid.calculate(
+                                    pose.getRotation().getRadians(), goalPose.getRotation().getRadians());
+
+                    final Translation2d delta = goalPose.getTranslation().minus(pose.getTranslation());
+                    final Rotation2d velocityHeading = delta.getAngle();
+                    final double distance = delta.getNorm(); // This works, check the source
+                    final double speed =
+                            MathUtil.clamp(
+                                    Math.abs(translationPid.calculate(distance, 0)),
+                                    0,
+                                    AutoConstants.MAX_AUTOALIGN_LINEAR_SPEED);
+
+                    final Translation2d velocity = new Translation2d(speed, 0).rotateBy(velocityHeading);
+
+                    runVelocity(
+                            ChassisSpeeds.fromFieldRelativeSpeeds(
+                                    velocity.getX(), velocity.getY(), omega, getRotation()),false);
+                    Logger.recordOutput("AutoAlign/GoalPose", goalPose);
+                    Logger.recordOutput("AutoAlign/DeltaToGoal", delta);
+                    Logger.recordOutput("AutoAlign/DistanceToGoal", distance);
+                    Logger.recordOutput("AutoAlign/Omega", omega);
+                    Logger.recordOutput("AutoAlign/Velocity", velocity);
+                    Logger.recordOutput("AutoAlign/Speed", speed);
+                },
+                () -> {
+                    stop();
+                    aligning = false;
+                },
+                this);
     }
 
     public ArrayList<SparkMax> getSparks() {
