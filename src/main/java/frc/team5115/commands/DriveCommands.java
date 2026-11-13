@@ -50,8 +50,8 @@ public class DriveCommands {
                                     ? new ChassisSpeeds(v.x, v.y, omega)
                                     : ChassisSpeeds.fromFieldRelativeSpeeds(
                                             v.x, v.y, omega, drivetrain.getGyroRotation()),
-                            false,
-                            true);
+                            false
+                            );
                 },
                 drivetrain);
     }
