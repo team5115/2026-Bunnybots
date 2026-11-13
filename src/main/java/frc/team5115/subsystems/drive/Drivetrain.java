@@ -20,7 +20,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team5115.Constants;
 import frc.team5115.Constants.AutoConstants;
@@ -392,8 +392,16 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
         final ChassisSpeeds chassisSpeeds = getChassisSpeeds();
         final double linearSpeed =
                 Math.pow(chassisSpeeds.vxMetersPerSecond, 2)
-                        + Math.pow(getChassisSpeeds().vyMetersPerSecond, 2);
+                        + Math.pow(chassisSpeeds.vyMetersPerSecond, 2);
         return translationPid.atSetpoint() && anglePid.atGoal() && linearSpeed < 0.1;
+    }
+
+    public Trigger alignedAtGoalTrigger(){
+        return new Trigger(()-> alignedAtGoal() && aligning);
+    }
+
+    public Trigger aligningToGoal(){
+        return new Trigger(()-> aligning);
     }
 
     public ChassisSpeeds getChassisSpeeds() {
@@ -574,7 +582,10 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
     }
 
     public Command alignToOven() {
-        return alignByPids(() -> new Pose2d(Units.Inches.of(18), Units.Inches.of(217.969), new Rotation2d(0.0)));
+        AutoConstants.getOvenPosition();
+        return alignByPids(() -> new Pose2d (AutoConstants.getOvenPosition().getX(), AutoConstants.getOvenPosition().getY(), new Rotation2d(0)));
+        
+        
         // TODO x = 633.223in for BLUE pose
     }
 
