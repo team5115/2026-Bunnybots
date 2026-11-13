@@ -5,7 +5,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -43,7 +42,6 @@ import frc.team5115.util.MotorContainer;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -82,7 +80,7 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
     private final double angular_ki = 0.0 * SwerveConstants.MAX_ANGULAR_SPEED;
     private final double angular_kd = 0.0 * SwerveConstants.MAX_ANGULAR_SPEED;
 
-    private final double linearPidTolerence = 0.04;
+    //private final double linearPidTolerence = 0.04;
 
     private final ProfiledPIDController anglePid =
             new ProfiledPIDController(
@@ -391,17 +389,16 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
     private boolean alignedAtGoal() {
         final ChassisSpeeds chassisSpeeds = getChassisSpeeds();
         final double linearSpeed =
-                Math.pow(chassisSpeeds.vxMetersPerSecond, 2)
-                        + Math.pow(chassisSpeeds.vyMetersPerSecond, 2);
+                Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2);
         return translationPid.atSetpoint() && anglePid.atGoal() && linearSpeed < 0.1;
     }
 
-    public Trigger alignedAtGoalTrigger(){
-        return new Trigger(()-> alignedAtGoal() && aligning);
+    public Trigger alignedAtGoalTrigger() {
+        return new Trigger(() -> alignedAtGoal() && aligning);
     }
 
-    public Trigger aligningToGoal(){
-        return new Trigger(()-> aligning);
+    public Trigger aligningToGoal() {
+        return new Trigger(() -> aligning);
     }
 
     public ChassisSpeeds getChassisSpeeds() {
@@ -583,9 +580,13 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
 
     public Command alignToOven() {
         AutoConstants.getOvenPosition();
-        return alignByPids(() -> new Pose2d (AutoConstants.getOvenPosition().getX(), AutoConstants.getOvenPosition().getY(), new Rotation2d(0)));
-        
-        
+        return alignByPids(
+                () ->
+                        new Pose2d(
+                                AutoConstants.getOvenPosition().getX(),
+                                AutoConstants.getOvenPosition().getY(),
+                                new Rotation2d(0)));
+
         // TODO x = 633.223in for BLUE pose
     }
 
@@ -613,7 +614,8 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
 
                     runVelocity(
                             ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    velocity.getX(), velocity.getY(), omega, getRotation()),false);
+                                    velocity.getX(), velocity.getY(), omega, getRotation()),
+                            false);
                     Logger.recordOutput("AutoAlign/GoalPose", goalPose);
                     Logger.recordOutput("AutoAlign/DeltaToGoal", delta);
                     Logger.recordOutput("AutoAlign/DistanceToGoal", distance);

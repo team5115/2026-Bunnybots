@@ -7,6 +7,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -83,6 +84,15 @@ public class ModuleIOSparkMax implements ModuleIO {
                 .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(SwerveConstants.DriveMotorCurrentLimit.autoLimit)
                 .voltageCompensation(12.0);
+
+        ClosedLoopConfig turnClosedLoopConfig = new ClosedLoopConfig();
+        turnClosedLoopConfig.p(2.4).i(0.0).d(0.0);
+        turnConfig.apply(turnClosedLoopConfig);
+
+        ClosedLoopConfig driveClosedLoopConfig = new ClosedLoopConfig();
+        driveClosedLoopConfig.p(0.05).i(0.0).d(0.0);
+        driveClosedLoopConfig.feedForward.kV(0.10065).kA(0.0041833).kS(0.15176);
+        driveConfig.apply(driveClosedLoopConfig);
 
         turnEncoderConfig.averageDepth(2).inverted(false);
         turnConfig.apply(turnEncoderConfig);

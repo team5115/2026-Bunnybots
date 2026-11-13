@@ -162,10 +162,11 @@ public final class Constants {
         public static final double MAX_AUTOALIGN_LINEAR_SPEED = 4.0; // m/s
 
         public static final Mass ROBOT_MASS = Pounds.of(83); // TODO update weight estimation
-        
-        public static final Translation2d BLUE_OVEN = new Translation2d(Inches.of(18), Inches.of(633.223));
+
+        public static final Translation2d BLUE_OVEN =
+                new Translation2d(Inches.of(18), Inches.of(633.223));
         public static final Translation2d RED_OVEN = new Translation2d(18, 217.969);
-        
+
         public static Translation2d getOvenPosition() {
             return isRedAlliance() ? RED_OVEN : BLUE_OVEN;
         }
