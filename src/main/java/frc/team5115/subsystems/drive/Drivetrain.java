@@ -586,7 +586,6 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
                                 AutoConstants.getOvenPosition().getX(),
                                 AutoConstants.getOvenPosition().getY(),
                                 new Rotation2d(0)));
-
         // TODO x = 633.223in for BLUE pose
     }
 
