@@ -80,7 +80,7 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
     private final double angular_ki = 0.0 * SwerveConstants.MAX_ANGULAR_SPEED;
     private final double angular_kd = 0.0 * SwerveConstants.MAX_ANGULAR_SPEED;
 
-    //private final double linearPidTolerence = 0.04;
+    // private final double linearPidTolerence = 0.04;
 
     private final ProfiledPIDController anglePid =
             new ProfiledPIDController(
