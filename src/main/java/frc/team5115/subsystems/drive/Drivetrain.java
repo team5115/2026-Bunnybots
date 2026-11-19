@@ -5,7 +5,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -43,7 +42,6 @@ import frc.team5115.util.MotorContainer;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -404,7 +402,6 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
      * Runs the drive at the desired velocity.
      *
      * @param speeds Speeds in meters/sec
-     * @param orbitting is this an orbit velocity?
      * @param slew should we limit the acceleration?
      */
     public void runVelocity(ChassisSpeeds speeds, boolean slew) {
@@ -574,7 +571,8 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
     }
 
     public Command alignToOven() {
-        return alignByPids(() -> new Pose2d(Units.Inches.of(18), Units.Inches.of(217.969), new Rotation2d(0.0)));
+        return alignByPids(
+                () -> new Pose2d(Units.Inches.of(18), Units.Inches.of(217.969), new Rotation2d(0.0)));
         // TODO x = 633.223in for BLUE pose
     }
 
@@ -602,7 +600,8 @@ public class Drivetrain extends SubsystemBase implements MotorContainer {
 
                     runVelocity(
                             ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    velocity.getX(), velocity.getY(), omega, getRotation()),false);
+                                    velocity.getX(), velocity.getY(), omega, getRotation()),
+                            false);
                     Logger.recordOutput("AutoAlign/GoalPose", goalPose);
                     Logger.recordOutput("AutoAlign/DeltaToGoal", delta);
                     Logger.recordOutput("AutoAlign/DistanceToGoal", distance);

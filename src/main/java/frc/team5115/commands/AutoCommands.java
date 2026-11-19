@@ -1,7 +1,6 @@
 package frc.team5115.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -100,12 +99,14 @@ public class AutoCommands {
     }
 
     public static Command alignToOven(Drivetrain drivetrain) {
-        return Commands.startRun(drivetrain::resetAngularPID, () -> {
-            final Translation2d ovenPos = AutoConstants.getOvenPosition();
-            // final Pose2d pose2d = getPose();
+        return Commands.startRun(
+                drivetrain::resetAngularPID,
+                () -> {
+                    final Translation2d ovenPos = AutoConstants.getOvenPosition();
+                    // final Pose2d pose2d = getPose();
 
-
-        }, drivetrain);
+                },
+                drivetrain);
     }
 
     /** Measures the robot's wheel radius by spinning in a circle. */
