@@ -68,7 +68,6 @@ public class Bindings {
                         () -> -driveJoy.getLeftY(),
                         () -> -driveJoy.getLeftX(),
                         () -> -driveJoy.getRightX()));
-                        
 
         // Hold Y to enable intake mode
         // .toggleOnTrue(
@@ -101,7 +100,7 @@ public class Bindings {
                                 () -> -driveJoy.getLeftY(),
                                 () -> -driveJoy.getLeftX(),
                                 () -> -driveJoy.getRightX()));
-        
+
         driveJoy.rightTrigger().whileTrue(drivetrain.alignToOven());
 
         driveJoy.x().onTrue(Commands.runOnce(drivetrain::stopWithX, drivetrain));

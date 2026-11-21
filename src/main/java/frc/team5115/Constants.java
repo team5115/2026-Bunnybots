@@ -51,9 +51,9 @@ public final class Constants {
     public static final double TELEOP_BARF_BURP_TIME = 0.5;
     public static final double AUTO_BARF_BURP_TIME = 0.5;
 
-    public static final byte INTAKE_MOTOR_ID = -1;
-    public static final byte INDEXER_MOTOR_ID = -1;
-    public static final byte ARM_MOTOR_ID = -1;
+    public static final byte INTAKE_MOTOR_ID = 13;
+    public static final byte INDEXER_MOTOR_ID = 11;
+    public static final byte ARM_MOTOR_ID = 12;
 
     public static final double LOOP_PERIOD_SECS = 0.02;
 
@@ -65,15 +65,15 @@ public final class Constants {
     public static final double INDEX_VOMIT_SPEED = -0.25;
 
     public static class SwerveConstants {
-        public static final byte FRONT_LEFT_DRIVE_ID = -1;
-        public static final byte FRONT_RIGHT_DRIVE_ID = -1;
-        public static final byte BACK_LEFT_DRIVE_ID = -1;
-        public static final byte BACK_RIGHT_DRIVE_ID = -1;
+        public static final byte FRONT_LEFT_DRIVE_ID = 6;
+        public static final byte FRONT_RIGHT_DRIVE_ID = 4;
+        public static final byte BACK_LEFT_DRIVE_ID = 10;
+        public static final byte BACK_RIGHT_DRIVE_ID = 8;
 
-        public static final byte FRONT_LEFT_TURN_ID = -1;
-        public static final byte FRONT_RIGHT_TURN_ID = -1;
-        public static final byte BACK_LEFT_TURN_ID = -1;
-        public static final byte BACK_RIGHT_TURN_ID = -1;
+        public static final byte FRONT_LEFT_TURN_ID = 5;
+        public static final byte FRONT_RIGHT_TURN_ID = 3;
+        public static final byte BACK_LEFT_TURN_ID = 9;
+        public static final byte BACK_RIGHT_TURN_ID = 7;
 
         private static RobotConfig ROBOT_CONFIG = null;
 
@@ -162,10 +162,11 @@ public final class Constants {
         public static final double MAX_AUTOALIGN_LINEAR_SPEED = 4.0; // m/s
 
         public static final Mass ROBOT_MASS = Pounds.of(83); // TODO update weight estimation
-        
-        public static final Translation2d BLUE_OVEN = new Translation2d(Inches.of(18), Inches.of(633.223));
+
+        public static final Translation2d BLUE_OVEN =
+                new Translation2d(Inches.of(18), Inches.of(633.223));
         public static final Translation2d RED_OVEN = new Translation2d(18, 217.969);
-        
+
         public static Translation2d getOvenPosition() {
             return isRedAlliance() ? RED_OVEN : BLUE_OVEN;
         }

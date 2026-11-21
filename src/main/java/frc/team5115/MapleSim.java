@@ -18,6 +18,7 @@ import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
+import org.ironmaple.simulation.seasonspecific.evergreen.ArenaEvergreen;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnField;
 import org.littletonrobotics.junction.Logger;
@@ -39,9 +40,10 @@ public class MapleSim {
                         IntakeSimulation.IntakeSide.FRONT,
                         25);
         final Arena2026Rebuilt arena = (Arena2026Rebuilt) SimulatedArena.getInstance();
+        SimulatedArena.overrideInstance(new ArenaEvergreen(false));
         SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(3, 3)));
         arena.addDriveTrainSimulation(swerveSim);
-        arena.setEfficiencyMode(true);
+        // arena.setEfficiencyMode(true);
     }
 
     public static void resetForAuto() {
