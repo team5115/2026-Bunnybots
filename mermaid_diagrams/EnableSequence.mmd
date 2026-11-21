@@ -1,0 +1,22 @@
+%% ---
+%% config:
+%%     theme: neo
+%%     look: classic
+%% ---
+
+flowchart LR
+    A(Driver Enable) --> B{Robot::Init}
+    subgraph init
+        B --> Log(Setup Logging)
+        B --> RobotC(Initialize RobotContainer) --> initSub(Initialize Subsystems)
+        Log --> Meta(Record MetaData)
+        RobotC --> RegisterCmds(Register Auto & Drive Commands)
+        RobotC --> SetupAuto(Setup AutoChooser)
+        RobotC --> Bindings(Set Drive and Manip Controller Bindings)
+        
+        
+    end
+    subgraph Periodic 
+        RobotC --> Periodic(Robot Periodic)
+    end
+    Bindings -->|Input Detected| doSomething(Run Corrosponding Commands)
